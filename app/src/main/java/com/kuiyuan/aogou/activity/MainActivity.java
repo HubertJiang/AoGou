@@ -1,4 +1,4 @@
-package com.kuiyuan.aogou;
+package com.kuiyuan.aogou.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.fragment.MainFragment;
 
 import cn.bmob.v3.Bmob;
@@ -90,16 +91,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            getFragmentManager().beginTransaction().replace(R.id.frame_content,new MainFragment()).commit();
+            getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
