@@ -16,7 +16,6 @@ import cn.bmob.v3.Bmob;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private Toolbar toolbar;
     private int currentItem = R.id.goods;
 
     @Override
@@ -25,7 +24,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Bmob.initialize(this, "3e6164ca438e7534e0174f7c6ae78247");
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
-        toolbar.setTitle(R.string.goods);
+        getSupportActionBar().setTitle(R.string.goods);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.goods && currentItem != id) {
             getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
-            toolbar.setTitle(R.string.goods);
+            getSupportActionBar().setTitle(R.string.goods);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
