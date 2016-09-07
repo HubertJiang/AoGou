@@ -38,6 +38,7 @@ public class MainFragment extends Fragment {
 
         BmobQuery<Goods> query = new BmobQuery<>();
         query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
+        query.addQueryKeys("name,content,image");
 //查询playerName叫“比目”的数据
 //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(50);

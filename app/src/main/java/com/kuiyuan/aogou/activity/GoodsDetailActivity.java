@@ -9,16 +9,16 @@ import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.entity.Goods;
 
 public class GoodsDetailActivity extends AppCompatActivity {
-    private Toolbar toolbar;
     private Goods goods;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods_detail);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar  toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(goods.name);
     }
 
     @Override
