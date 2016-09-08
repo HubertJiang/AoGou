@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.kuiyuan.aogou.R;
+import com.kuiyuan.aogou.Util.Constant;
 import com.kuiyuan.aogou.adapter.MainAdapter;
 import com.kuiyuan.aogou.entity.Goods;
 
@@ -29,6 +30,7 @@ public class MainFragment extends Fragment {
     private MainAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int lastVisibleItem, page;
+    private boolean hasMore;
 
     @Nullable
     @Override
@@ -57,7 +59,7 @@ public class MainFragment extends Fragment {
             public void onScrollStateChanged(RecyclerView recyclerView,
                                              int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                if (hasMore && newState == RecyclerView.SCROLL_STATE_IDLE
                         && lastVisibleItem + 1 == adapter.getItemCount()) {
                     swipeRefreshLayout.setRefreshing(true);
                     get();
@@ -80,14 +82,19 @@ public class MainFragment extends Fragment {
         query.addQueryKeys("name,content,image");
 //查询playerName叫“比目”的数据
 //返回50条数据，如果不加上这条语句，默认返回10条数据
-        query.setLimit(8);
-        query.setSkip(8 * page);
+        query.setLimit(Constant.COUNT);
+        query.setSkip(Constant.COUNT * page);
 //执行查询方法
         query.findObjects(new FindListener<Goods>() {
             @Override
             public void done(List<Goods> object, BmobException e) {
                 swipeRefreshLayout.setRefreshing(false);
                 if (e == null) {
+                    if (object.size() < Constant.COUNT) {
+                        hasMore = false;
+                    } else {
+                        hasMore = true;
+                    }
                     page++;
                     if (page == 0) {
                         adapter.setData(object);
