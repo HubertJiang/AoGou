@@ -32,7 +32,7 @@ public class MainAdapter extends BaseAdapter<Goods> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MainViewHolder) {
-            Goods goods = getItem(position);
+            final Goods goods = getItem(position);
             ((MainViewHolder) holder).name.setText(goods.name);
             ((MainViewHolder) holder).content.setText(goods.content);
             if(goods.image!=null)
@@ -42,6 +42,7 @@ public class MainAdapter extends BaseAdapter<Goods> {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(getContext(), GoodsDetailActivity.class);
+                    intent.putExtra("id",goods.getObjectId());
                     getContext().startActivity(intent);
                 }
             });
