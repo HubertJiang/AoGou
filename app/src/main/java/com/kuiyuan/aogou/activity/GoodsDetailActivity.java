@@ -35,13 +35,14 @@ public class GoodsDetailActivity extends AppCompatActivity {
         content= (TextView) findViewById(R.id.content);
         imageView= (ImageView) findViewById(R.id.image);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
         swipeRefreshLayout.setRefreshing(true);
         BmobQuery<Goods> query = new BmobQuery<>();
         query.getObject(id, new QueryListener<Goods>() {
 
             @Override
             public void done(Goods object, BmobException e) {
-                swipeRefreshLayout.setRefreshing(false);
+//                swipeRefreshLayout.setRefreshing(false);
                 if(e==null){
                     getSupportActionBar().setTitle(object.name);
                     content.setText(object.content);
