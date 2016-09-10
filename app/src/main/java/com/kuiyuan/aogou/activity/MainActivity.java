@@ -8,11 +8,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.fragment.MainFragment;
 
-import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Bmob.initialize(this, "3e6164ca438e7534e0174f7c6ae78247");
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
         getSupportActionBar().setTitle(R.string.goods);
+        
+
+        ((TextView)navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());
     }
 
     @Override
