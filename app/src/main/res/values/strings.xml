@@ -25,6 +25,8 @@
 
     <!--setting-->
     <string name="setting">设置</string>
+    <string name="exit">退出登录</string>
 
     <string name="ao">澳洲</string>
+
 </resources>

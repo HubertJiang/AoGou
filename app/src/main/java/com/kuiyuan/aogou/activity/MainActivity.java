@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.fragment.MainFragment;
+import com.kuiyuan.aogou.fragment.SettingFragment;
 
 import cn.bmob.v3.BmobUser;
 
@@ -39,9 +40,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
         getSupportActionBar().setTitle(R.string.goods);
-        
 
-        ((TextView)navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());
+        navigationView.setCheckedItem(0);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());
     }
 
     @Override
@@ -59,18 +60,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.goods && currentItem != id) {
-            getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
-            getSupportActionBar().setTitle(R.string.goods);
-        } else if (id == R.id.nav_gallery) {
+        if (currentItem != id) {
+            if (id == R.id.goods) {
+                getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
+                getSupportActionBar().setTitle(R.string.goods);
+                currentItem = id;
+            } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
+            } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
-
-
+            } else if (id == R.id.setting) {
+                getFragmentManager().beginTransaction().replace(R.id.frame_content, new SettingFragment()).commit();
+                getSupportActionBar().setTitle(R.string.setting);
+                currentItem = id;
+            }
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
