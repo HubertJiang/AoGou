@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/image_blue">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:paddingLeft="@dimen/image_vertical_margin"
+        android:src="@drawable/image_back_selector" />
+
+    <TextView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:layout_marginLeft="@dimen/image_vertical_margin"
+        android:layout_marginStart="@dimen/image_vertical_margin"
+        android:textColor="@color/image_white" />
+
+    <TextView
+        android:id="@+id/text_view_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:visibility="gone"
+        android:textColor="@color/image_white"
+        android:textSize="@dimen/image_title_size" />
+
+
+    <Button
+        android:id="@+id/category_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@null"
+        android:drawablePadding="5dp"
+        android:drawableRight="@drawable/image_row_selector"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="@string/mis_folder_all"
+        android:textColor="@color/image_white"
+        android:textSize="@dimen/image_title_size" />
+
+
+    <ImageView
+        android:id="@+id/image_view_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/image_vertical_margin"
+        android:layout_marginEnd="@dimen/image_vertical_margin"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:src="@drawable/mis_btn_unselected" />
+
+
+</RelativeLayout>

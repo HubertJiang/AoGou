@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/image_white">
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/image_top_view" />
+
+    <GridView
+        android:id="@+id/grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top"
+        android:clipToPadding="false"
+        android:horizontalSpacing="@dimen/mis_space_size"
+        android:numColumns="4"
+        android:paddingBottom="?android:attr/actionBarSize"
+        android:verticalSpacing="@dimen/mis_space_size" />
+
+
+    <me.nereo.multi_image_selector.multiimages.ImageViewTouchViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top"
+        android:background="@android:color/black"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

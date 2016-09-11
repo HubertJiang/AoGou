@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
+        swipeRefreshLayout.setEnabled(false);
         SMSSDK.initSDK(this, "16f89e72e9f32", "1672abf13cf56ac79ed75280d008eae9");
         final EventHandler eh = new EventHandler() {
 

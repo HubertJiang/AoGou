@@ -1,5 +1,6 @@
 package com.kuiyuan.aogou.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.kuiyuan.aogou.R;
@@ -43,6 +45,12 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setCheckedItem(0);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());
+        (navigationView.getHeaderView(0).findViewById(R.id.name)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, InformationActivity.class));
+            }
+        });
     }
 
     @Override
