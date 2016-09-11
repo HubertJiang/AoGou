@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mis_image_size">120dp</dimen>
+    <dimen name="mis_space_size">2dp</dimen>
+    <dimen name="mis_folder_cover_size">72dp</dimen>
+
+    <dimen name="image_vertical_margin">10dp</dimen>
+    <dimen name="image_title_size">20sp</dimen>
+</resources>

@@ -37,4 +37,7 @@ public class AoApplication extends Application {
         toast.show();
     }
 
+    public static Application getInstance() {
+        return instance;
+    }
 }
