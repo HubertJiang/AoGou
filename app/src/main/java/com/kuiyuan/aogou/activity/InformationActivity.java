@@ -189,13 +189,10 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == REQUEST_READ_CONTACTS &&grantResults.length == 1) {
             if ( grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 if (!shouldShowRequestPermissionRationale(CAMERA)) {
-//                    Snackbar.make(findViewById(R.id.view), R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-//                            .setAction(android.R.string.ok, new View.OnClickListener() {
-//                                @Override
-//                                @TargetApi(Build.VERSION_CODES.M)
-//                                public void onClick(View v) {
-//                                }
-//                            }).show();
+                    Intent intent =  new Intent();
+                    intent.setAction("android.intent.action.MAIN");
+                    intent.setClassName("com.android.settings", "com.android.settings.ManageApplications");
+                    startActivity(intent);
                 }
 //                populateAutoComplete();
             } else {
