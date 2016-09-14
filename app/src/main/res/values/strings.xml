@@ -31,7 +31,7 @@
 
     <string name="avatar">头像</string>
     <string name="nickname">昵称</string>
-    <string name="usual_address">常居地</string>
+    <string name="usual_address">地址</string>
     <string name="signature">个人简介</string>
     <string name="information">个人信息</string>
     <string name="save">保存</string>

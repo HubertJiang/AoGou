@@ -72,7 +72,8 @@ public class MainFragment extends Fragment {
                 lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
             }
         });
-
+        swipeRefreshLayout.setRefreshing(true);
+        get();
         return view;
     }
 

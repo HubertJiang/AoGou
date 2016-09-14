@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
         getSupportActionBar().setTitle(R.string.goods);
+        navigationView.setCheckedItem(R.id.goods);
 
         navigationView.setCheckedItem(0);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());

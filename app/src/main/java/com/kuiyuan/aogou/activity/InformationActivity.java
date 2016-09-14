@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,8 +62,10 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initialize() {
-
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.information);
         addressTextView = (TextView) findViewById(R.id.addressTextView);
         signatureTextView = (TextView) findViewById(R.id.signatureTextView);
         nicknameTextView = (TextView) findViewById(R.id.nicknameTextView);
@@ -153,16 +157,15 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
     }
 
 
-//    private void modify() {
-//        Api api = new Api();
-//        Parameter parameter = new Parameter();
-//        parameter.headimg = avatar;
-//        parameter.userid = Application.getUid();
-//        api.name = "user.profile.detail.post";
-//        api.params = parameter;
-//        VolleyInstance.connect(Request.Method.POST, VolleyInstance.getRequest(1, api), listener, errorListener);
-//    }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     private boolean mayRequestContacts() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
