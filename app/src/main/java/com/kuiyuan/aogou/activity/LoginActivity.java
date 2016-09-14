@@ -1,14 +1,9 @@
 package com.kuiyuan.aogou.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -31,8 +26,6 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -60,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (EditText) findViewById(R.id.email);
+        mEmailView = (EditText) findViewById(R.id.number);
 //        populateAutoComplete();
 
         getCodeButton = (Button) findViewById(R.id.get_code);
@@ -117,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                     mEmailView.setError(getString(R.string.error_field_required));
                 } else {
                     getCodeButton.setEnabled(false);
-                    SMSSDK.getVerificationCode("86",phone);
+                    SMSSDK.getVerificationCode("86", phone);
                 }
             }
         });
@@ -149,9 +142,9 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
                             } else {
-                                Message message=new Message();
-                                message.arg1=9;
-                                message.arg2=SMSSDK.RESULT_COMPLETE;
+                                Message message = new Message();
+                                message.arg1 = 9;
+                                message.arg2 = SMSSDK.RESULT_COMPLETE;
                                 handler.sendMessage(message);
 
                             }
@@ -164,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
                     //返回支持发送验证码的国家列表
                     Log.d("--------", "_________");
-                }else if(event==9){
+                } else if (event == 9) {
                     User user = new User();
                     user.setUsername(phone);
                     user.setPassword("123456");
@@ -183,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 swipeRefreshLayout.setRefreshing(false);
                 try {
-                    JSONObject json=new JSONObject(((Throwable)data).getMessage());
+                    JSONObject json = new JSONObject(((Throwable) data).getMessage());
                     AoApplication.showToast(json.getString("detail"));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -195,43 +188,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     };
-
-
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                populateAutoComplete();
-            }
-        }
-    }
 
 
     /**
@@ -274,16 +230,28 @@ public class LoginActivity extends AppCompatActivity {
             // perform the user login attempt.
 //            showProgress(true);
             swipeRefreshLayout.setRefreshing(true);
-            SMSSDK.submitVerificationCode("86", phone, code);
+//            SMSSDK.submitVerificationCode("86", phone, code);
+            User user = new User();
+            user.setUsername(phone);
+            user.setPassword("123456");
 
+            user.login(new SaveListener<User>() {
+                @Override
+                public void done(User user, BmobException e) {
+                    if (user != null) {
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        Message message = new Message();
+                        message.arg1 = 9;
+                        message.arg2 = SMSSDK.RESULT_COMPLETE;
+                        handler.sendMessage(message);
+
+                    }
+                }
+            });
         }
     }
-
-
-
-
-
-
 
 
 }

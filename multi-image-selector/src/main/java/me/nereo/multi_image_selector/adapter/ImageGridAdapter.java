@@ -243,21 +243,29 @@ public class ImageGridAdapter extends BaseAdapter {
                     indicator.setImageResource(R.drawable.mis_btn_unselected);
                     mask.setVisibility(View.GONE);
                 }
+                indicator.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fragment.selectImageFromGrid(data, 1);
+                    }
+                });
+                image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fragment.showPicture(data);
+                    }
+                });
             } else {
                 indicator.setVisibility(View.GONE);
+                image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fragment.selectImageFromGrid(data, 0);
+                    }
+                });
             }
-            indicator.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fragment.selectImageFromGrid(data, 1);
-                }
-            });
-            image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fragment.showPicture(data);
-                }
-            });
+
+
             File imageFile = new File(data.path);
             if (imageFile.exists()) {
                 // 显示图片
