@@ -96,12 +96,12 @@ public class MainFragment extends Fragment {
                     } else {
                         hasMore = true;
                     }
-                    page++;
                     if (page == 0) {
                         adapter.setData(object);
                     } else {
                         adapter.addAll(object);
                     }
+                    page++;
                 } else {
                     Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
