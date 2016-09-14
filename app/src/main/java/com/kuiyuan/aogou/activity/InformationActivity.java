@@ -1,17 +1,35 @@
 package com.kuiyuan.aogou.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.entity.User;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
+import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+
+import static android.Manifest.permission.CAMERA;
 
 /**
  * Created by Administrator on 2015/3/6.
@@ -23,7 +41,7 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
     private String imagePath;
     private User user;
     private static final int REQUEST_IMAGE = 2;
-
+    private static final int REQUEST_READ_CONTACTS = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +52,7 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
 //        addressTextView.setText(Application.getUser().provincename + Application.getUser().cityname);
 //        signatureTextView.setText(Application.getUser().shortdesc);
         nicknameTextView.setText(user.getNickname());
-//        Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImageView);
+        Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImageView);
         findViewById(R.id.signature).setOnClickListener(this);
         findViewById(R.id.address).setOnClickListener(this);
         findViewById(R.id.avatar).setOnClickListener(this);
@@ -71,13 +89,15 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(intent, 3);
                 break;
             case R.id.avatar:
-                intent = new Intent(this, MultiImageSelectorActivity.class);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 2);
+                if (mayRequestContacts()) {
+                    intent = new Intent(this, MultiImageSelectorActivity.class);
+                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 2);
 
 
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, 0);
-                startActivityForResult(intent, REQUEST_IMAGE);
+                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, 0);
+                    startActivityForResult(intent, REQUEST_IMAGE);
+                }
                 break;
         }
     }
@@ -87,6 +107,47 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE) {
             if (resultCode == RESULT_OK) {
+             ArrayList<String> images = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
+                final BmobFile bmobFile = new BmobFile(new File(images.get(0)));
+                bmobFile.uploadblock(new UploadFileListener() {
+
+                    @Override
+                    public void done(BmobException e) {
+                        if(e==null){
+                            final User newUser = new User();
+                            newUser.setAvatar(bmobFile);
+                            BmobUser bmobUser = BmobUser.getCurrentUser();
+                            newUser.update(bmobUser.getObjectId(),new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if(e==null){
+                                        Glide.with(AoApplication.getInstance()).load(newUser.getAvatar().getUrl()).into(avatarImageView);
+                                    }else{
+                                        try {
+                                            JSONObject json=new JSONObject(e.getMessage());
+                                            AoApplication.showToast(json.getString("detail"));
+                                        } catch (JSONException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+                        }else{
+                            try {
+                                JSONObject json=new JSONObject(e.getMessage());
+                                AoApplication.showToast(json.getString("detail"));
+                            } catch (JSONException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onProgress(Integer value) {
+                        // 返回的上传进度（百分比）
+                    }
+                });
             }
         }
     }
@@ -102,5 +163,45 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
 //        VolleyInstance.connect(Request.Method.POST, VolleyInstance.getRequest(1, api), listener, errorListener);
 //    }
 
+    private boolean mayRequestContacts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
 
+        requestPermissions(new String[]{CAMERA}, REQUEST_READ_CONTACTS);
+
+        return false;
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_CONTACTS &&grantResults.length == 1) {
+            if ( grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                if (!shouldShowRequestPermissionRationale(CAMERA)) {
+//                    Snackbar.make(findViewById(R.id.view), R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+//                            .setAction(android.R.string.ok, new View.OnClickListener() {
+//                                @Override
+//                                @TargetApi(Build.VERSION_CODES.M)
+//                                public void onClick(View v) {
+//                                }
+//                            }).show();
+                }
+//                populateAutoComplete();
+            } else {
+                Intent   intent = new Intent(this, MultiImageSelectorActivity.class);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 2);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, 0);
+                startActivityForResult(intent, REQUEST_IMAGE);
+            }
+        }
+    }
 }

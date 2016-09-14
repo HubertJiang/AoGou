@@ -10,17 +10,20 @@ import cn.bmob.v3.BmobUser;
 
 public class WelcomeActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        if(BmobUser.getCurrentUser()==null){
-            startActivity(new Intent(this,LoginActivity.class));
-        }else {
-           startActivity(new Intent(this,MainActivity.class));
+        if (BmobUser.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
         }
 
         finish();
     }
+
+
 }
