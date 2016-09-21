@@ -10,10 +10,11 @@
         layout="@layout/view_top" />
 
     <TableLayout
-        android:layout_below="@id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_below="@id/top"
+        android:layout_marginTop="20dp"
+        android:background="@color/image_white">
 
         <TableRow
             android:id="@+id/avatar"
@@ -124,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/content" />
 
         </TableRow>
