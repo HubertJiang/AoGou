@@ -194,7 +194,6 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
                     intent.setClassName("com.android.settings", "com.android.settings.ManageApplications");
                     startActivity(intent);
                 }
-//                populateAutoComplete();
             } else {
                 Intent   intent = new Intent(this, MultiImageSelectorActivity.class);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);

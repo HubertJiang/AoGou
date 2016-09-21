@@ -1,4 +1,4 @@
-package com.kuiyuan.aogou.Util;
+package com.kuiyuan.aogou.util;
 
 /**
  * Created by liweihui on 16/9/8.

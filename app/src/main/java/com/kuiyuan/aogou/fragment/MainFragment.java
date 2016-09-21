@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.kuiyuan.aogou.R;
-import com.kuiyuan.aogou.Util.Constant;
 import com.kuiyuan.aogou.adapter.MainAdapter;
 import com.kuiyuan.aogou.entity.Goods;
+import com.kuiyuan.aogou.util.Constant;
+import com.kuiyuan.aogou.util.RecycleViewDivider;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class MainFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addItemDecoration(new RecycleViewDivider(getActivity()));
         adapter = new MainAdapter(getActivity(), recyclerView, null);
         recyclerView.setAdapter(adapter);
 

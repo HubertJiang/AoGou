@@ -19,9 +19,6 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">请输入手机号码</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
 
     <!--setting-->
     <string name="setting">设置</string>
@@ -31,7 +28,7 @@
 
     <string name="avatar">头像</string>
     <string name="nickname">昵称</string>
-    <string name="usual_address">地址</string>
+    <string name="usual_address">我的地址</string>
     <string name="signature">个人简介</string>
     <string name="information">个人信息</string>
     <string name="save">保存</string>
