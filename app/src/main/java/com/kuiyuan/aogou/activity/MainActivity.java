@@ -10,9 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kuiyuan.aogou.R;
+import com.kuiyuan.aogou.entity.User;
 import com.kuiyuan.aogou.fragment.MainFragment;
 import com.kuiyuan.aogou.fragment.SettingFragment;
 
@@ -46,7 +49,8 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setCheckedItem(0);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());
-        (navigationView.getHeaderView(0).findViewById(R.id.name)).setOnClickListener(new View.OnClickListener() {
+        Glide.with(this).load(BmobUser.getCurrentUser(User.class).getAvatar().getUrl()).into((ImageView)navigationView.getHeaderView(0).findViewById(R.id.image_view));
+        (navigationView.getHeaderView(0).findViewById(R.id.top_view)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, InformationActivity.class));

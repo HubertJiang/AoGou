@@ -35,16 +35,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity"></activity>
-        <activity android:name=".activity.MainActivity"></activity>
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.GoodsDetailActivity" />
-
         <activity
             android:name=".activity.InformationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ModifyNicknameActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.LikesActivity"></activity>
     </application>
 
 </manifest>
