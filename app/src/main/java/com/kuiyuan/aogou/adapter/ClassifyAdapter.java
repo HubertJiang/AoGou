@@ -38,10 +38,10 @@ public class ClassifyAdapter extends ArrayAdapter<Classify> {
         return getCustomView(position, convertView, parent);
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
-    }
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        return getCustomView(position, convertView, parent);
+//    }
 
     public View getCustomView(int position, View convertView, ViewGroup parent) {
 
@@ -49,11 +49,6 @@ public class ClassifyAdapter extends ArrayAdapter<Classify> {
         View row = inflater.inflate(R.layout.item_classify, parent, false);
         TextView label = (TextView) row.findViewById(R.id.text_view);
         label.setText(objects.get(position).name);
-
-        if (position == 0) {//Special style for dropdown header
-            label.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-        }
-
         return row;
     }
 }
