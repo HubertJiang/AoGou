@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="invest_order">
+        <item>收回日期从近到远</item>
+        <item>收回日期从远到近</item>
+        <item>投资日期从近到远</item>
+        <item>投资日期从远到近</item>
+        <item>本金收回从大到小</item>
+        <item>本金收回从小到大</item>
+    </string-array>
+</resources>

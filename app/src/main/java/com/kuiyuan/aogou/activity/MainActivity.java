@@ -4,26 +4,36 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.kuiyuan.aogou.R;
+import com.kuiyuan.aogou.adapter.ClassifyAdapter;
+import com.kuiyuan.aogou.entity.Classify;
 import com.kuiyuan.aogou.entity.User;
 import com.kuiyuan.aogou.fragment.MainFragment;
 import com.kuiyuan.aogou.fragment.SettingFragment;
 
-import cn.bmob.v3.BmobUser;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private int currentItem = R.id.goods;
+    private ClassifyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +59,15 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setCheckedItem(0);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());
-        Glide.with(this).load(BmobUser.getCurrentUser(User.class).getAvatar().getUrl()).into((ImageView)navigationView.getHeaderView(0).findViewById(R.id.image_view));
+        Glide.with(this).load(BmobUser.getCurrentUser(User.class).getAvatar().getUrl()).into((ImageView) navigationView.getHeaderView(0).findViewById(R.id.image_view));
         (navigationView.getHeaderView(0).findViewById(R.id.top_view)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, InformationActivity.class));
             }
         });
+
+        get();
     }
 
     @Override
@@ -66,6 +78,22 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.action_settings);
+        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+
+        adapter = new ClassifyAdapter(this, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter); // set the adapter to provide layout of rows and content
+//        spinner.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
+        return true;
     }
 
 
@@ -91,5 +119,20 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void get() {
+        BmobQuery<Classify> query = new BmobQuery<>();
+        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
+        query.findObjects(new FindListener<Classify>() {
+            @Override
+            public void done(List<Classify> list, BmobException e) {
+                if (e == null) {
+                    adapter.setObjects(list);
+                } else {
+                    AoApplication.showToast(e.toString());
+                }
+            }
+        });
     }
 }
