@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +32,7 @@ import cn.bmob.v3.listener.FindListener;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private int currentItem = R.id.goods;
     private ClassifyAdapter adapter;
+    private   Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +43,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+         spinner = (Spinner) findViewById(R.id.spinner);
+
+        adapter = new ClassifyAdapter(this, R.layout.title_spinner);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(R.layout.item_classify);
+
+        spinner.setAdapter(adapter); // set the adapter to provide layout of rows and content
+//        spinner.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -54,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
-        getSupportActionBar().setTitle(R.string.goods);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         navigationView.setCheckedItem(R.id.goods);
 
         navigationView.setCheckedItem(0);
@@ -80,21 +87,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.action_settings);
-        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-
-        adapter = new ClassifyAdapter(this, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(adapter); // set the adapter to provide layout of rows and content
-//        spinner.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        MenuItem item = menu.findItem(R.id.action_settings);
+//        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+//
+//        adapter = new ClassifyAdapter(this, android.R.layout.simple_spinner_item);
+//// Specify the layout to use when the list of choices appears
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        spinner.setAdapter(adapter); // set the adapter to provide layout of rows and content
+////        spinner.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
+//        return true;
+//    }
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -105,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (id == R.id.goods) {
                 getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
                 getSupportActionBar().setTitle(R.string.goods);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+                spinner.setVisibility(View.VISIBLE);
                 currentItem = id;
             } else if (id == R.id.nav_gallery) {
 
@@ -113,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (id == R.id.setting) {
                 getFragmentManager().beginTransaction().replace(R.id.frame_content, new SettingFragment()).commit();
                 getSupportActionBar().setTitle(R.string.setting);
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
+                spinner.setVisibility(View.GONE);
                 currentItem = id;
             }
         }
