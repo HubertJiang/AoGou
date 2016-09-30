@@ -1,6 +1,7 @@
 package com.kuiyuan.aogou.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,23 +33,29 @@ public class ClassifyAdapter extends ArrayAdapter<Classify> {
         this.objects=objects;
     }
 
+    @NonNull
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = LayoutInflater.from(context).inflate(R.layout.title_spinner, parent, false);
+        TextView label = (TextView) view.findViewById(R.id.text_view_title);
+        label.setText(objects.get(position).name);
+        return view;
+    }
+
     @Override
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
-    }
-
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        return getCustomView(position, convertView, parent);
-//    }
-
-    public View getCustomView(int position, View convertView, ViewGroup parent) {
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = inflater.inflate(R.layout.item_classify, parent, false);
-        TextView label = (TextView) row.findViewById(R.id.text_view);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_classify, parent, false);
+        TextView label = (TextView) view.findViewById(R.id.text_view);
         label.setText(objects.get(position).name);
-        return row;
+//        if (gradeSpinner.getSelectedItemPosition() == position) {
+//            view.setBackgroundColor(getResources().getColor(
+//                    R.color.spinner_green));
+//        } else {
+//            view.setBackgroundColor(getResources().getColor(
+//                    R.color.spinner_light_green));
+//        }
+        return view;
     }
+
 }
