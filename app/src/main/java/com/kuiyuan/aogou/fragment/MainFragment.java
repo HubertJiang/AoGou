@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.adapter.MainAdapter;
+import com.kuiyuan.aogou.entity.Classify;
 import com.kuiyuan.aogou.entity.Goods;
 import com.kuiyuan.aogou.util.Constant;
 import com.kuiyuan.aogou.util.RecycleViewDivider;
@@ -20,6 +22,7 @@ import com.kuiyuan.aogou.util.RecycleViewDivider;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -32,6 +35,7 @@ public class MainFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private int lastVisibleItem, page;
     private boolean hasMore;
+    private String id;
 
     @Nullable
     @Override
@@ -79,10 +83,23 @@ public class MainFragment extends Fragment {
         return view;
     }
 
+    public void refresh(String id) {
+        if (this.id == id)
+            return;
+        page=0;
+        this.id = id;
+        get();
+    }
+
     private void get() {
         BmobQuery<Goods> query = new BmobQuery<>();
 //        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
         query.addQueryKeys("name,content,image");
+        if (!TextUtils.isEmpty(id)) {
+            Classify classify = new Classify();
+            classify.setObjectId(id);
+            query.addWhereEqualTo("type", new BmobPointer(classify));
+        }
 //查询playerName叫“比目”的数据
 //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(Constant.COUNT);

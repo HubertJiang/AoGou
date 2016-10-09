@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,7 +33,7 @@ import cn.bmob.v3.listener.FindListener;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private int currentItem = R.id.goods;
     private ClassifyAdapter adapter;
-    private   Spinner spinner;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +44,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-         spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = (Spinner) findViewById(R.id.spinner);
 
         adapter = new ClassifyAdapter(this, R.layout.title_spinner);
 // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(R.layout.item_classify);
 
         spinner.setAdapter(adapter); // set the adapter to provide layout of rows and content
-//        spinner.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((MainFragment)getFragmentManager().findFragmentByTag("goods")).refresh(adapter.getItem(position).getObjectId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        }); // set the listener, to perform actions based on item selection
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(),"goods").commit();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         navigationView.setCheckedItem(R.id.goods);
 
@@ -87,22 +98,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        MenuItem item = menu.findItem(R.id.action_settings);
-//        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-//
-//        adapter = new ClassifyAdapter(this, android.R.layout.simple_spinner_item);
-//// Specify the layout to use when the list of choices appears
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        spinner.setAdapter(adapter); // set the adapter to provide layout of rows and content
-////        spinner.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
-//        return true;
-//    }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -110,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         if (currentItem != id) {
             if (id == R.id.goods) {
-                getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(),"goods").commit();
                 getSupportActionBar().setTitle(R.string.goods);
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
                 spinner.setVisibility(View.VISIBLE);
@@ -139,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void done(List<Classify> list, BmobException e) {
                 if (e == null) {
+                    Classify classify = new Classify();
+                    classify.name = getString(R.string.all);
+                    list.add(0, classify);
                     adapter.setObjects(list);
                 } else {
                     AoApplication.showToast(e.toString());
