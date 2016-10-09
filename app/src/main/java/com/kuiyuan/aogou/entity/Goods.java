@@ -9,5 +9,5 @@ import cn.bmob.v3.datatype.BmobFile;
 public class Goods extends BmobObject {
     public String name;
     public String content;
-    public BmobFile image;
+    public BmobFile image,image1,image2,image3;
 }

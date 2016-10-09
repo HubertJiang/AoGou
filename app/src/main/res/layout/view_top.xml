@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:dropDownWidth="match_parent"
             android:overlapAnchor="false"
+            android:visibility="gone"
             android:popupBackground="@color/image_white"
             android:spinnerMode="dropdown" />
     </android.support.v7.widget.Toolbar>
