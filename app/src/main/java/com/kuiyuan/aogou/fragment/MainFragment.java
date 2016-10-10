@@ -94,7 +94,7 @@ public class MainFragment extends Fragment {
     private void get() {
         BmobQuery<Goods> query = new BmobQuery<>();
 //        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
-        query.addQueryKeys("name,content,image");
+        query.addQueryKeys("name,content,image,price");
         if (!TextUtils.isEmpty(id)) {
             Classify classify = new Classify();
             classify.setObjectId(id);
