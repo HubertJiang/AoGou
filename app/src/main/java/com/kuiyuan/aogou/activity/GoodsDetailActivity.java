@@ -1,22 +1,27 @@
 package com.kuiyuan.aogou.activity;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.kuiyuan.aogou.R;
+import com.kuiyuan.aogou.adapter.ImageAdapter;
 import com.kuiyuan.aogou.entity.Goods;
 import com.kuiyuan.aogou.entity.User;
+import com.kuiyuan.aogou.util.CirclePageIndicator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
@@ -25,9 +30,11 @@ import cn.bmob.v3.listener.UpdateListener;
 public class GoodsDetailActivity extends AppCompatActivity implements View.OnClickListener {
     private String id;
     private TextView content,likesTextView;
-    private ImageView imageView;
+    private ViewPager viewPager;
+    private CirclePageIndicator circlePageIndicator;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Goods goods;
+    private ImageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +47,13 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
 
         content= (TextView) findViewById(R.id.content);
         likesTextView= (TextView) findViewById(R.id.likes_text_view);
-        imageView= (ImageView) findViewById(R.id.image);
+        viewPager= (ViewPager) findViewById(R.id.viewPager);
+        circlePageIndicator= (CirclePageIndicator) findViewById(R.id.indicator);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
 
+        adapter = new ImageAdapter();
         likesTextView.setOnClickListener(this);
-
         swipeRefreshLayout.setRefreshing(true);
         BmobQuery<Goods> query = new BmobQuery<>();
         query.getObject(id, new QueryListener<Goods>() {
@@ -58,7 +66,20 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
                 if(e==null){
                     getSupportActionBar().setTitle(object.name);
                     content.setText(object.content);
-                    Glide.with(GoodsDetailActivity.this).load(object.image.getUrl()).into(imageView);
+                    List<BmobFile> images=new ArrayList<>();
+                    images.add(object.image);
+                    if(object.image1!=null){
+                        images.add(object.image1);
+                    }
+                    if(object.image2!=null){
+                        images.add(object.image2);
+                    }
+                    if(object.image3!=null){
+                        images.add(object.image3);
+                    }
+                    adapter.setImages(images);
+                    viewPager.setAdapter(adapter);
+                    circlePageIndicator.setViewPager(viewPager);
                 }else{
                     Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
                 }
