@@ -28,23 +28,37 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.WelcomeActivity">
+        <activity
+            android:name=".activity.WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.GoodsDetailActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.GoodsDetailActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.InformationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ModifyNicknameActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.LikesActivity"></activity>
+        <activity
+            android:name=".activity.LikesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ImageViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
     </application>
 
 </manifest>

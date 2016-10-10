@@ -17,7 +17,6 @@ import com.kuiyuan.aogou.entity.User;
 import com.kuiyuan.aogou.util.CirclePageIndicator;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -55,6 +54,7 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
         adapter = new ImageAdapter();
         likesTextView.setOnClickListener(this);
         swipeRefreshLayout.setRefreshing(true);
+
         BmobQuery<Goods> query = new BmobQuery<>();
         query.getObject(id, new QueryListener<Goods>() {
 
@@ -66,7 +66,7 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
                 if(e==null){
                     getSupportActionBar().setTitle(object.name);
                     content.setText(object.content);
-                    List<BmobFile> images=new ArrayList<>();
+                    ArrayList<BmobFile> images=new ArrayList<>();
                     images.add(object.image);
                     if(object.image1!=null){
                         images.add(object.image1);
