@@ -1,5 +1,6 @@
 package com.kuiyuan.aogou.adapter;
 
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -8,8 +9,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.kuiyuan.aogou.activity.AoApplication;
+import com.kuiyuan.aogou.activity.ImageViewActivity;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -18,9 +20,9 @@ import cn.bmob.v3.datatype.BmobFile;
  */
 
 public class ImageAdapter extends PagerAdapter {
-    private List<BmobFile> images;
+    private ArrayList<BmobFile> images;
 
-    public void setImages(List<BmobFile> images) {
+    public void setImages(ArrayList<BmobFile> images) {
         this.images = images;
     }
 
@@ -40,12 +42,20 @@ public class ImageAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(final ViewGroup container, final int position) {
         ImageView photoView = new ImageView(container.getContext(), null);
 
         String imageUrl = images.get(position).getUrl();
         Glide.with(AoApplication.getInstance()).load(imageUrl).into(photoView);
-
+        photoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(container.getContext(), ImageViewActivity.class);
+                intent.putExtra("images", images);
+                intent.putExtra("index", position);
+                container.getContext().startActivity(intent);
+            }
+        });
         container.addView(photoView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT);
 
         return photoView;
