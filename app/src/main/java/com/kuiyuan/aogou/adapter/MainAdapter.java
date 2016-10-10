@@ -12,6 +12,7 @@ import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.ViewHolder.MainViewHolder;
 import com.kuiyuan.aogou.activity.GoodsDetailActivity;
 import com.kuiyuan.aogou.entity.Goods;
+import com.kuiyuan.aogou.util.FormatUtil;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class MainAdapter extends BaseAdapter<Goods> {
             final Goods goods = getItem(position);
             ((MainViewHolder) holder).name.setText(goods.name);
             ((MainViewHolder) holder).content.setText(goods.content);
+            ((MainViewHolder) holder).money.setText(FormatUtil.moneyFormat(goods.price));
             if(goods.image!=null)
             Glide.with(getContext()).load(goods.image.getUrl()).into(((MainViewHolder)holder).imageView);
 

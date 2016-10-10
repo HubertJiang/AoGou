@@ -10,4 +10,5 @@ public class Goods extends BmobObject {
     public String name;
     public String content;
     public BmobFile image,image1,image2,image3;
+    public Double price;
 }
