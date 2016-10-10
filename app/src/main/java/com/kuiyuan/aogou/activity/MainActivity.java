@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(),"goods").commit();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        spinner.setVisibility(View.VISIBLE);
         navigationView.setCheckedItem(R.id.goods);
 
         navigationView.setCheckedItem(0);
