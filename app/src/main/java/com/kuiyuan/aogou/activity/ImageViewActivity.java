@@ -38,7 +38,7 @@ public class ImageViewActivity extends Activity {
         imageViewPager.setAdapter(adapter);
 
         imageViewPager.setCurrentItem(index);
-        CircleImageView circleImageView;
+
     }
 
     @Override
