@@ -17,7 +17,7 @@ import com.kuiyuan.aogou.adapter.MainAdapter;
 import com.kuiyuan.aogou.entity.Classify;
 import com.kuiyuan.aogou.entity.Goods;
 import com.kuiyuan.aogou.util.Constant;
-import com.kuiyuan.aogou.util.RecycleViewDivider;
+import com.kuiyuan.aogou.view.RecycleViewDivider;
 
 import java.util.List;
 

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.widget.Toast;
 
 import cn.bmob.v3.Bmob;
+import io.rong.imkit.RongIM;
 
 /**
  * Created by jiangkuiyuan on 16/9/10.
@@ -17,6 +18,7 @@ public class AoApplication extends Application {
         super.onCreate();
         instance = this;
         Bmob.initialize(this, "3e6164ca438e7534e0174f7c6ae78247");
+        RongIM.init(this);
     }
 
     public static void showToast(String string) {
