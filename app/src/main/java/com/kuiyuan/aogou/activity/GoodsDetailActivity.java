@@ -14,7 +14,7 @@ import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.adapter.ImageAdapter;
 import com.kuiyuan.aogou.entity.Goods;
 import com.kuiyuan.aogou.entity.User;
-import com.kuiyuan.aogou.util.CirclePageIndicator;
+import com.kuiyuan.aogou.view.CirclePageIndicator;
 
 import java.util.ArrayList;
 

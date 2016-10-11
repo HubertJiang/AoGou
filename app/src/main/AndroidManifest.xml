@@ -59,6 +59,10 @@
             android:name=".activity.ImageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+
+        <meta-data
+            android:name="RONG_CLOUD_APP_KEY"
+            android:value="lmxuhwagxhi2d" />
     </application>
 
 </manifest>
