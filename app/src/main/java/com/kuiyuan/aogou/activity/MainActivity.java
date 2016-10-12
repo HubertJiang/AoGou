@@ -1,6 +1,7 @@
 package com.kuiyuan.aogou.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,13 +24,22 @@ import com.kuiyuan.aogou.entity.Classify;
 import com.kuiyuan.aogou.entity.User;
 import com.kuiyuan.aogou.fragment.MainFragment;
 import com.kuiyuan.aogou.fragment.SettingFragment;
+import com.kuiyuan.aogou.util.NetUtil;
+import com.kuiyuan.aogou.util.SPUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.RongIMClient;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private int currentItem = R.id.goods;
@@ -54,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((MainFragment)getFragmentManager().findFragmentByTag("goods")).refresh(adapter.getItem(position).getObjectId());
+                ((MainFragment) getFragmentManager().findFragmentByTag("goods")).refresh(adapter.getItem(position).getObjectId());
             }
 
             @Override
@@ -71,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(),"goods").commit();
+        getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(), "goods").commit();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         spinner.setVisibility(View.VISIBLE);
         navigationView.setCheckedItem(R.id.goods);
@@ -87,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         get();
+        getToken();
     }
 
     @Override
@@ -106,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         if (currentItem != id) {
             if (id == R.id.goods) {
-                getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(),"goods").commit();
+                getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(), "goods").commit();
                 getSupportActionBar().setTitle(R.string.goods);
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
                 spinner.setVisibility(View.VISIBLE);
@@ -144,5 +156,90 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+    }
+
+    private void getToken() {
+        new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected String doInBackground(Void... params) {
+                Map<String, String> map = new HashMap<>();
+                map.put("userId", BmobUser.getCurrentUser(User.class).getObjectId());
+                map.put("name", BmobUser.getCurrentUser(User.class).getNickname());
+                map.put("portraitUri", BmobUser.getCurrentUser(User.class).getAvatar().getUrl());
+                String result = NetUtil.getInstance().post("http://api.cn.ronghub.com/user/getToken.json",map);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+
+                try {
+                    if (result != null) {
+                        JSONObject object = new JSONObject(result);
+
+                        if (object.getInt("code") == 200) {
+                           String token = object.getString("token");
+                            SPUtils.setString(MainActivity.this,SPUtils.TOKEN,token);
+                            connect(token);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+    }
+
+    /**
+     * 建立与融云服务器的连接
+     *
+     * @param token
+     */
+    private void connect(String token) {
+
+        if (getApplicationInfo().packageName.equals(AoApplication.getCurProcessName(getApplicationContext()))) {
+
+            /**
+             * IMKit SDK调用第二步,建立与服务器的连接
+             */
+            RongIM.connect(token, new RongIMClient.ConnectCallback() {
+
+                /**
+                 * Token 错误，在线上环境下主要是因为 Token 已经过期，您需要向 App Server 重新请求一个新的 Token
+                 */
+                @Override
+                public void onTokenIncorrect() {
+
+                    Log.d("LoginActivity", "--onTokenIncorrect");
+                }
+
+                /**
+                 * 连接融云成功
+                 * @param userid 当前 token
+                 */
+                @Override
+                public void onSuccess(String userid) {
+
+                    Log.d("LoginActivity", "--onSuccess" + userid);
+                    //启动会话界面
+                    if (RongIM.getInstance() != null)
+                        RongIM.getInstance().startPrivateChat(MainActivity.this, userid, "title");
+//                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                    finish();
+                }
+
+                /**
+                 * 连接融云失败
+                 * @param errorCode 错误码，可到官网 查看错误码对应的注释
+                 *                  http://www.rongcloud.cn/docs/android.html#常见错误码
+                 */
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+
+                    Log.d("LoginActivity", "--onError" + errorCode);
+                }
+            });
+        }
     }
 }
