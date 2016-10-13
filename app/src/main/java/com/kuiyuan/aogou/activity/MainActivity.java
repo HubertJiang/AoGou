@@ -1,6 +1,7 @@
 package com.kuiyuan.aogou.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -38,8 +39,10 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.UserInfo;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private int currentItem = R.id.goods;
@@ -89,7 +92,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setCheckedItem(0);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());
-        Glide.with(this).load(BmobUser.getCurrentUser(User.class).getAvatar().getUrl()).into((ImageView) navigationView.getHeaderView(0).findViewById(R.id.image_view));
+        if(BmobUser.getCurrentUser(User.class).getAvatar()!=null){
+            Glide.with(this).load(BmobUser.getCurrentUser(User.class).getAvatar().getUrl()).into((ImageView) navigationView.getHeaderView(0).findViewById(R.id.image_view));
+        }
+
         (navigationView.getHeaderView(0).findViewById(R.id.top_view)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 map.put("userId", BmobUser.getCurrentUser(User.class).getObjectId());
                 map.put("name", BmobUser.getCurrentUser(User.class).getNickname());
                 map.put("portraitUri", BmobUser.getCurrentUser(User.class).getAvatar().getUrl());
-                String result = NetUtil.getInstance().post("http://api.cn.ronghub.com/user/getToken.json",map);
+                String result = NetUtil.getInstance().post("http://api.cn.ronghub.com/user/getToken.json", map);
                 return result;
             }
 
@@ -179,8 +185,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         JSONObject object = new JSONObject(result);
 
                         if (object.getInt("code") == 200) {
-                           String token = object.getString("token");
-                            SPUtils.setString(MainActivity.this,SPUtils.TOKEN,token);
+                            String token = object.getString("token");
+                            SPUtils.setString(MainActivity.this, SPUtils.TOKEN, token);
                             connect(token);
                         }
                     }
@@ -189,6 +195,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }.execute();
+    }
+
+    private void refresh() {
+        new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected String doInBackground(Void... params) {
+                Map<String, String> map = new HashMap<>();
+                map.put("userId", BmobUser.getCurrentUser(User.class).getObjectId());
+                map.put("name", BmobUser.getCurrentUser(User.class).getNickname());
+                map.put("portraitUri", BmobUser.getCurrentUser(User.class).getAvatar().getUrl());
+                String result = NetUtil.getInstance().post("http://api.cn.ronghub.com/user/refresh.json", map);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+
+                try {
+                    if (result != null) {
+                        JSONObject object = new JSONObject(result);
+
+                        if (object.getInt("code") == 200) {
+
+                            RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
+
+                                @Override
+                                public UserInfo getUserInfo(String userId) {
+
+                                    return getUser(userId);//根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
+                                }
+
+                            }, true);
+
+                            if (RongIM.getInstance() != null)
+                                RongIM.getInstance().startPrivateChat(MainActivity.this, "2c7fe97e7e", "title");
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+    }
+
+    private UserInfo getUser(String userId){
+        BmobQuery<User> query = new BmobQuery<>();
+        query.getObject(userId,new QueryListener<User>() {
+            @Override
+            public void done(User object,BmobException e) {
+                if(e==null){
+                    RongIM.getInstance().refreshUserInfoCache(new UserInfo(object.getObjectId(),
+                            object.getNickname(),
+                            Uri.parse(object.getAvatar().getUrl())));
+                }else{
+//                    toast("更新用户信息失败:" + e.getMessage());
+                }
+            }
+        });
+        return null;
     }
 
     /**
@@ -223,8 +289,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     Log.d("LoginActivity", "--onSuccess" + userid);
                     //启动会话界面
-                    if (RongIM.getInstance() != null)
-                        RongIM.getInstance().startPrivateChat(MainActivity.this, userid, "title");
+                    refresh();
 //                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
 //                    finish();
                 }
