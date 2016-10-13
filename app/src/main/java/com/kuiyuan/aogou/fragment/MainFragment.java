@@ -86,7 +86,7 @@ public class MainFragment extends Fragment {
     public void refresh(String id) {
         if (this.id == id)
             return;
-        page=0;
+        page = 0;
         this.id = id;
         get();
     }
