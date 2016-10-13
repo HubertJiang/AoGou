@@ -11,6 +11,7 @@ import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.activity.LikesActivity;
 
 import cn.bmob.v3.BmobUser;
+import io.rong.imkit.RongIM;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +70,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         view.findViewById(R.id.likes).setOnClickListener(this);
         view.findViewById(R.id.exit).setOnClickListener(this);
+        view.findViewById(R.id.message).setOnClickListener(this);
         return view;
     }
 
@@ -82,6 +84,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             case R.id.exit:
                 BmobUser.logOut();
                 getActivity().finish();
+                break;
+            case R.id.message:
+                if (RongIM.getInstance() != null)
+                    RongIM.getInstance().startConversationList(getActivity());
                 break;
         }
     }
