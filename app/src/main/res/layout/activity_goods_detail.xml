@@ -59,9 +59,16 @@
 
                 <TextView
                     android:id="@+id/likes_text_view"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="likes" />
+                    android:layout_weight="1"
+                    android:text="@string/favorite" />
+                <TextView
+                    android:id="@+id/service_text_view"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/service" />
             </LinearLayout>
         </LinearLayout>
 
