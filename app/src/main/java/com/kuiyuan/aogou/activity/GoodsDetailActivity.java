@@ -25,10 +25,11 @@ import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
+import io.rong.imkit.RongIM;
 
 public class GoodsDetailActivity extends AppCompatActivity implements View.OnClickListener {
     private String id;
-    private TextView content,likesTextView;
+    private TextView content,likesTextView,serviceTextView;
     private ViewPager viewPager;
     private CirclePageIndicator circlePageIndicator;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -46,6 +47,7 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
 
         content= (TextView) findViewById(R.id.content);
         likesTextView= (TextView) findViewById(R.id.likes_text_view);
+        serviceTextView= (TextView) findViewById(R.id.service_text_view);
         viewPager= (ViewPager) findViewById(R.id.viewPager);
         circlePageIndicator= (CirclePageIndicator) findViewById(R.id.indicator);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -53,6 +55,7 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
 
         adapter = new ImageAdapter();
         likesTextView.setOnClickListener(this);
+        serviceTextView.setOnClickListener(this);
         swipeRefreshLayout.setRefreshing(true);
 
         BmobQuery<Goods> query = new BmobQuery<>();
@@ -116,6 +119,10 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
                         }
                     }
                 });
+                break;
+            case R.id.service_text_view:
+                if (RongIM.getInstance() != null)
+                    RongIM.getInstance().startPrivateChat(this, "TLW7444p", getString(R.string.service));
                 break;
         }
     }

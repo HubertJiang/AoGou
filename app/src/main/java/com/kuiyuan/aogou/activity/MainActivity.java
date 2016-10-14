@@ -229,8 +229,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             }, true);
 
-                            if (RongIM.getInstance() != null)
-                                RongIM.getInstance().startPrivateChat(MainActivity.this, "2c7fe97e7e", "title");
+
                         }
                     }
                 } catch (JSONException e) {
