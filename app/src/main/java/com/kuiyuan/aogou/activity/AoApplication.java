@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.tencent.bugly.Bugly;
+
 import cn.bmob.v3.Bmob;
 import io.rong.imkit.RongIM;
 
@@ -19,6 +21,7 @@ public class AoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        Bugly.init(getApplicationContext(), "900027438", false);
         Bmob.initialize(this, "3e6164ca438e7534e0174f7c6ae78247");
 
         /**

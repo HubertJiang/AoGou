@@ -9,8 +9,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_horizontal_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,17 +37,17 @@
                             android:layout_height="wrap_content" />
 
                         <com.kuiyuan.aogou.view.CirclePageIndicator
-                            android:layout_width="match_parent"
                             android:id="@+id/indicator"
-                            android:layout_gravity="bottom"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom" />
                     </FrameLayout>
 
 
                     <TextView
                         android:id="@+id/content"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>
 
@@ -63,11 +63,12 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/favorite" />
+
                 <TextView
                     android:id="@+id/service_text_view"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/service" />
             </LinearLayout>
         </LinearLayout>
