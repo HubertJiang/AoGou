@@ -52,6 +52,7 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
         circlePageIndicator= (CirclePageIndicator) findViewById(R.id.indicator);
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
 
         adapter = new ImageAdapter();
         likesTextView.setOnClickListener(this);
