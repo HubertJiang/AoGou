@@ -1,24 +1,21 @@
 package com.kuiyuan.aogou.activity;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.kuiyuan.aogou.R;
 import com.kuiyuan.aogou.adapter.ClassifyAdapter;
 import com.kuiyuan.aogou.entity.Classify;
@@ -31,6 +28,7 @@ import com.kuiyuan.aogou.util.SPUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +42,14 @@ import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.UserInfo;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
     private int currentItem = R.id.goods;
     private ClassifyAdapter adapter;
     private Spinner spinner;
+    private List<Fragment> fragments = new ArrayList<>();
+    private ViewPager viewPager;
+    private BottomNavigationView bottomNavigationView;
+    private MenuItem prevMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((MainFragment) getFragmentManager().findFragmentByTag("goods")).refresh(adapter.getItem(position).getObjectId());
+//                ((MainFragment) getSupportFragmentManager().findFragmentByTag("goods")).refresh(adapter.getItem(position).getObjectId());
             }
 
             @Override
@@ -77,74 +79,83 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }); // set the listener, to perform actions based on item selection
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(), "goods").commit();
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        spinner.setVisibility(View.VISIBLE);
-        navigationView.setCheckedItem(R.id.goods);
+        MainFragment mainFragment = new MainFragment();
+        SettingFragment settingFragment = new SettingFragment();
+        fragments.add(new MainFragment());
+        fragments.add(new SettingFragment());
+        fragments.add(mainFragment);
+        fragments.add(settingFragment);
 
-        navigationView.setCheckedItem(0);
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name)).setText(BmobUser.getCurrentUser().getUsername());
-        if(BmobUser.getCurrentUser(User.class).getAvatar()!=null){
-            Glide.with(this).load(BmobUser.getCurrentUser(User.class).getAvatar().getUrl()).into((ImageView) navigationView.getHeaderView(0).findViewById(R.id.image_view));
-        }
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
-        (navigationView.getHeaderView(0).findViewById(R.id.top_view)).setOnClickListener(new View.OnClickListener() {
+        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, InformationActivity.class));
+            public android.support.v4.app.Fragment getItem(int position) {
+                return fragments.get(position);
+            }
+
+            @Override
+            public int getCount() {
+                return fragments.size();
             }
         });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                } else {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.goods:
+                                viewPager.setCurrentItem(0);
+                                break;
+                            case R.id.delete:
+                                viewPager.setCurrentItem(1);
+                                break;
+                            case R.id.setting:
+                                viewPager.setCurrentItem(2);
+                                break;
+                            case R.id.me:
+                                viewPager.setCurrentItem(3);
+                                break;
+
+                        }
+                        return false;
+                    }
+                });
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        spinner.setVisibility(View.VISIBLE);
+
 
         get();
         getToken();
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (currentItem != id) {
-            if (id == R.id.goods) {
-                getFragmentManager().beginTransaction().replace(R.id.frame_content, new MainFragment(), "goods").commit();
-                getSupportActionBar().setTitle(R.string.goods);
-                getSupportActionBar().setDisplayShowTitleEnabled(false);
-                spinner.setVisibility(View.VISIBLE);
-                currentItem = id;
-            } else if (id == R.id.nav_gallery) {
-
-            } else if (id == R.id.nav_slideshow) {
-
-            } else if (id == R.id.setting) {
-                getFragmentManager().beginTransaction().replace(R.id.frame_content, new SettingFragment()).commit();
-                getSupportActionBar().setTitle(R.string.setting);
-                getSupportActionBar().setDisplayShowTitleEnabled(true);
-                spinner.setVisibility(View.GONE);
-                currentItem = id;
-            }
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     private void get() {
         BmobQuery<Classify> query = new BmobQuery<>();
@@ -239,16 +250,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }.execute();
     }
 
-    private UserInfo getUser(String userId){
+    private UserInfo getUser(String userId) {
         BmobQuery<User> query = new BmobQuery<>();
-        query.getObject(userId,new QueryListener<User>() {
+        query.getObject(userId, new QueryListener<User>() {
             @Override
-            public void done(User object,BmobException e) {
-                if(e==null){
+            public void done(User object, BmobException e) {
+                if (e == null) {
                     RongIM.getInstance().refreshUserInfoCache(new UserInfo(object.getObjectId(),
                             object.getNickname(),
                             Uri.parse(object.getAvatar().getUrl())));
-                }else{
+                } else {
 //                    toast("更新用户信息失败:" + e.getMessage());
                 }
             }
