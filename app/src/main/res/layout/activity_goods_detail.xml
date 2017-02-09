@@ -36,7 +36,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
-                        <com.kuiyuan.aogou.view.CirclePageIndicator
+                        <com.kui.gou.view.CirclePageIndicator
                             android:id="@+id/indicator"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
