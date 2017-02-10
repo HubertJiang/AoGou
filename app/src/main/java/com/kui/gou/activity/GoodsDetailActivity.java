@@ -59,12 +59,12 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
         likesTextView.setOnClickListener(this);
         serviceTextView.setOnClickListener(this);
         swipeRefreshLayout.setRefreshing(true);
-swipeRefreshLayout.setOnTouchListener(new View.OnTouchListener() {
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return true;
-    }
-});
+        swipeRefreshLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         BmobQuery<Goods> query = new BmobQuery<>();
         query.getObject(id, new QueryListener<Goods>() {
@@ -72,7 +72,7 @@ swipeRefreshLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public void done(Goods object, BmobException e) {
                 goods = object;
-//                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setRefreshing(false);
 //                swipeRefreshLayout.setEnabled(false);
                 if (e == null) {
                     getSupportActionBar().setTitle(object.name);
