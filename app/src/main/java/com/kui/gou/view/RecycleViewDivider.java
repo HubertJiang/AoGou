@@ -62,8 +62,9 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
     public RecycleViewDivider(Context context) {
         mOrientation = LinearLayoutManager.HORIZONTAL;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setColor(context.getResources().getColor(R.color.divider));
         mPaint.setAlpha(0);
-        mDividerHeight=context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
+//        mDividerHeight=context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
     }
 
     /**
