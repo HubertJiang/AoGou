@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         get();
-        getToken();
+//        getToken();
     }
 
 

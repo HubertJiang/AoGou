@@ -8,7 +8,10 @@ import android.widget.Toast;
 import com.tencent.bugly.Bugly;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.exception.BmobException;
 import io.rong.imkit.RongIM;
+
+import static io.rong.common.ResourceUtils.string;
 
 /**
  * Created by jiangkuiyuan on 16/9/10.
@@ -45,6 +48,18 @@ public class AoApplication extends Application {
     }
 
     public static void showToast(String string) {
+        if (toast == null) {
+            toast = Toast.makeText(instance, string, Toast.LENGTH_SHORT);
+        } else {
+            toast.setText(string);
+        }
+        toast.show();
+    }
+
+    public static void showToast(BmobException e) {
+        switch (e.getErrorCode()){
+
+        }
         if (toast == null) {
             toast = Toast.makeText(instance, string, Toast.LENGTH_SHORT);
         } else {

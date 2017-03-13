@@ -32,11 +32,6 @@ import cn.smssdk.SMSSDK;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -56,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         mEmailView = (EditText) findViewById(R.id.number);
 //        populateAutoComplete();
 
-        getCodeButton = (Button) findViewById(R.id.get_code);
+//        getCodeButton = (Button) findViewById(R.id.get_code);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -69,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,18 +97,18 @@ public class LoginActivity extends AppCompatActivity {
         };
         SMSSDK.registerEventHandler(eh); //注册短信回调
 
-        getCodeButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phone = mEmailView.getText().toString();
-                if (TextUtils.isEmpty(phone)) {
-                    mEmailView.setError(getString(R.string.error_field_required));
-                } else {
-                    getCodeButton.setEnabled(false);
-                    SMSSDK.getVerificationCode("86", phone);
-                }
-            }
-        });
+//        getCodeButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String phone = mEmailView.getText().toString();
+//                if (TextUtils.isEmpty(phone)) {
+//                    mEmailView.setError(getString(R.string.error_field_required));
+//                } else {
+//                    getCodeButton.setEnabled(false);
+//                    SMSSDK.getVerificationCode("86", phone);
+//                }
+//            }
+//        });
     }
 
     Handler handler = new Handler() {
@@ -126,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
             int result = msg.arg2;
             Object data = msg.obj;
 
-
+            swipeRefreshLayout.setRefreshing(false);
             if (result == SMSSDK.RESULT_COMPLETE) {
                 //回调完成
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
@@ -216,8 +211,8 @@ public class LoginActivity extends AppCompatActivity {
             focusView = mEmailView;
             cancel = true;
         } else if (TextUtils.isEmpty(code)) {
-            mPasswordView.setError(getString(R.string.input_code));
-            focusView = mEmailView;
+            mPasswordView.setError(getString(R.string.input_password));
+            focusView = mPasswordView;
             cancel = true;
         }
 
@@ -233,19 +228,17 @@ public class LoginActivity extends AppCompatActivity {
 //            SMSSDK.submitVerificationCode("86", phone, code);
             User user = new User();
             user.setUsername(phone);
-            user.setPassword("123456");
+            user.setPassword(code);
 
             user.login(new SaveListener<User>() {
                 @Override
                 public void done(User user, BmobException e) {
+                    swipeRefreshLayout.setRefreshing(false);
                     if (user != null) {
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     } else {
-                        Message message = new Message();
-                        message.arg1 = 9;
-                        message.arg2 = SMSSDK.RESULT_COMPLETE;
-                        handler.sendMessage(message);
+                        AoApplication.showToast(R.string.login_error);
 
                     }
                 }
