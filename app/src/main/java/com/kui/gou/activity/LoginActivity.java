@@ -24,13 +24,12 @@ import org.json.JSONObject;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
-import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements OnClickListener {
 
 
     /**
@@ -76,26 +75,26 @@ public class LoginActivity extends AppCompatActivity {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
         swipeRefreshLayout.setEnabled(false);
-        SMSSDK.initSDK(this, "16f89e72e9f32", "1672abf13cf56ac79ed75280d008eae9");
-        final EventHandler eh = new EventHandler() {
-
-            @Override
-            public void afterEvent(int event, int result, Object data) {
-
-                Message msg = new Message();
-                msg.arg1 = event;
-                msg.arg2 = result;
-                msg.obj = data;
-
-                System.out.println("result-----" + result);
-                System.out.println("data-----" + data);
-
-                handler.sendMessage(msg);
-
-
-            }
-        };
-        SMSSDK.registerEventHandler(eh); //注册短信回调
+//        SMSSDK.initSDK(this, "16f89e72e9f32", "1672abf13cf56ac79ed75280d008eae9");
+//        final EventHandler eh = new EventHandler() {
+//
+//            @Override
+//            public void afterEvent(int event, int result, Object data) {
+//
+//                Message msg = new Message();
+//                msg.arg1 = event;
+//                msg.arg2 = result;
+//                msg.obj = data;
+//
+//                System.out.println("result-----" + result);
+//                System.out.println("data-----" + data);
+//
+//                handler.sendMessage(msg);
+//
+//
+//            }
+//        };
+//        SMSSDK.registerEventHandler(eh); //注册短信回调
 
 //        getCodeButton.setOnClickListener(new OnClickListener() {
 //            @Override
@@ -109,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
+        findViewById(R.id.sign_up).setOnClickListener(this);
     }
 
     Handler handler = new Handler() {
@@ -247,5 +247,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.sign_up:
+                startActivity(new Intent(this,SignUpActivity.class));
+                break;
+            case R.id.get_password:
+                break;
+        }
+    }
 }
 
