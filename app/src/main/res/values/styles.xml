@@ -20,4 +20,10 @@
     <style name="toolbar_theme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorControlNormal">@android:color/white</item>
     </style>
+
+    <style name="Button" parent="Base.TextAppearance.AppCompat.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+    </style>
 </resources>

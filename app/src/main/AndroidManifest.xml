@@ -41,6 +41,9 @@
             android:name="com.kui.gou.activity.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.kui.gou.activity.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.kui.gou.activity.MainActivity"
             android:screenOrientation="portrait" />
         <activity

@@ -5,10 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:padding="@dimen/activity_vertical_margin"
     tools:context="com.kui.gou.activity.LoginActivity">
 
 
@@ -30,8 +27,7 @@
                 android:hint="@string/prompt_email"
                 android:inputType="number"
                 android:maxLength="11"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -48,22 +44,19 @@
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
-                android:inputType="number"
-                android:maxLength="4"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:inputType="textPassword"
+                android:maxLength="16"
+                android:maxLines="1"/>
 
         </android.support.design.widget.TextInputLayout>
 
 
         <Button
             android:id="@+id/sign_in_button"
-            style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/action_sign_in"
-            android:textStyle="bold" />
+            style="@style/Button" />
 
         <LinearLayout
             android:layout_width="match_parent"
