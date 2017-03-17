@@ -2,6 +2,7 @@ package com.kui.gou.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.ViewFlipper;
 
 import com.kui.gou.R;
 import com.kui.gou.util.Constant;
+import com.kui.gou.util.TimeCount;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONException;
@@ -31,7 +33,9 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
     private EditText numberText, codeText, passwordText, rePasswordText;
     private Button nextButton, sureButton;
     private TextView getCode;
-    private String phone, code, password;
+    private String phone, code, password, rePassword;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private TimeCount timeCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,9 +49,12 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
         nextButton = (Button) findViewById(R.id.next_button);
         sureButton = (Button) findViewById(R.id.sure_button);
         getCode = (TextView) findViewById(R.id.get_code_text);
+        viewFlipper = (ViewFlipper) findViewById(R.id.view_flipper);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         getCode.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         sureButton.setOnClickListener(this);
+        timeCount=new TimeCount(getCode,getString(R.string.can_resend_code),R.string.resend_code);
 
         SMSSDK.initSDK(this, Constant.SMS_APP_KEY, Constant.SMS_APP_SECRET);
         EventHandler eh = new EventHandler() {
@@ -57,20 +64,22 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        swipeRefreshLayout.setRefreshing(false);
+                        swipeRefreshLayout.setRefreshing(false);
                         if (result == SMSSDK.RESULT_COMPLETE) {
                             //回调完成
                             if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                                 //提交验证码成功
                                 viewFlipper.showNext();
+                                getSupportActionBar().setTitle(R.string.reset_password);
                             } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                                 //获取验证码成功
+                                timeCount.start();
                                 AoApplication.showToast(R.string.code_send);
                             } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
                                 //返回支持发送验证码的国家列表
                             }
                         } else {
-
+getCode.setEnabled(true);
                             try {
                                 Throwable throwable = (Throwable) data;
                                 throwable.printStackTrace();
@@ -106,26 +115,39 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                 code = codeText.getText().toString();
                 if (TextUtils.isEmpty(phone)) {
                     numberText.setError(getString(R.string.error_field_required));
+                    numberText.requestFocus();
                 } else if (TextUtils.isEmpty(code)) {
-                    codeText.setError(getString(R.string.input_password));
+                    codeText.setError(getString(R.string.input_code));
+                    codeText.requestFocus();
                 } else {
-//                    swipeRefreshLayout.setRefreshing(true);
+                    swipeRefreshLayout.setRefreshing(true);
                     SMSSDK.submitVerificationCode("86", phone, code);
                 }
                 break;
             case R.id.sure_button:
-                BmobUser user= BmobUser.getCurrentUser();
-                user.setPassword(password);
-                user.update(new UpdateListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if(e==null){
-                            AoApplication.showToast("更新用户信息成功");
-                        }else{
-                            AoApplication.showToast("更新用户信息失败:" + e.getMessage());
+                password = passwordText.getText().toString();
+                rePassword = rePasswordText.getText().toString();
+                if (TextUtils.isEmpty(password)) {
+
+                } else if (TextUtils.isEmpty(rePassword)) {
+
+                } else if (!password.equals(rePassword)) {
+
+                } else {
+                    BmobUser user = BmobUser.getCurrentUser();
+                    user.setPassword(password);
+                    user.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                AoApplication.showToast("更新用户信息成功");
+                                finish();
+                            } else {
+                                AoApplication.showToast("更新用户信息失败:" + e.getMessage());
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 break;
             case R.id.get_code_text:
                 String phone = numberText.getText().toString();
@@ -133,7 +155,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                     numberText.setError(getString(R.string.error_field_required));
                 } else {
                     v.setEnabled(false);
-//                    swipeRefreshLayout.setRefreshing(true);
+                    swipeRefreshLayout.setRefreshing(true);
                     SMSSDK.getVerificationCode("86", phone);
                 }
                 break;
