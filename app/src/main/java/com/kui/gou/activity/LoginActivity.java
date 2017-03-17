@@ -75,40 +75,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
         swipeRefreshLayout.setEnabled(false);
-//        SMSSDK.initSDK(this, "16f89e72e9f32", "1672abf13cf56ac79ed75280d008eae9");
-//        final EventHandler eh = new EventHandler() {
-//
-//            @Override
-//            public void afterEvent(int event, int result, Object data) {
-//
-//                Message msg = new Message();
-//                msg.arg1 = event;
-//                msg.arg2 = result;
-//                msg.obj = data;
-//
-//                System.out.println("result-----" + result);
-//                System.out.println("data-----" + data);
-//
-//                handler.sendMessage(msg);
-//
-//
-//            }
-//        };
-//        SMSSDK.registerEventHandler(eh); //注册短信回调
-
-//        getCodeButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String phone = mEmailView.getText().toString();
-//                if (TextUtils.isEmpty(phone)) {
-//                    mEmailView.setError(getString(R.string.error_field_required));
-//                } else {
-//                    getCodeButton.setEnabled(false);
-//                    SMSSDK.getVerificationCode("86", phone);
-//                }
-//            }
-//        });
         findViewById(R.id.sign_up).setOnClickListener(this);
+        findViewById(R.id.get_password).setOnClickListener(this);
     }
 
     Handler handler = new Handler() {
@@ -254,6 +222,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 startActivity(new Intent(this,SignUpActivity.class));
                 break;
             case R.id.get_password:
+                startActivity(new Intent(this,ResetPasswordActivity.class));
                 break;
         }
     }
