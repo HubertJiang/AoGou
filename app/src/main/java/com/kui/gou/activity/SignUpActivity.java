@@ -1,14 +1,10 @@
 package com.kui.gou.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +15,8 @@ import android.widget.TextView;
 
 import com.kui.gou.R;
 import com.kui.gou.entity.User;
+import com.kui.gou.util.Constant;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,12 +27,11 @@ import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-    // UI references.
-    private EditText numberText, codeText,passwordText;
+    private EditText numberText, codeText, passwordText;
     private TextView getCode;
-    private String phone, code;
+    private String phone, code, password;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -48,7 +45,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         numberText = (EditText) findViewById(R.id.number);
         codeText = (EditText) findViewById(R.id.code);
         passwordText = (EditText) findViewById(R.id.password);
-//        populateAutoComplete();
 
         getCode = (TextView) findViewById(R.id.get_code_text);
         getCode.setOnClickListener(this);
@@ -64,134 +60,85 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.sign_in_button);
-//        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                attemptLogin();
-//            }
-//        });
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
         swipeRefreshLayout.setEnabled(false);
-        SMSSDK.initSDK(this, "16f89e72e9f32", "1672abf13cf56ac79ed75280d008eae9");
-        final EventHandler eh = new EventHandler() {
+        SMSSDK.initSDK(this, Constant.SMS_APP_KEY, Constant.SMS_APP_SECRET);
+        EventHandler eh = new EventHandler() {
 
             @Override
-            public void afterEvent(int event, int result, Object data) {
+            public void afterEvent(final int event, final int result, final Object data) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (result == SMSSDK.RESULT_COMPLETE) {
+                            //回调完成
+                            if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                                //提交验证码成功
+                                User user = new User();
+                                user.setUsername(phone);
+                                user.setPassword(password);
+                                user.signUp(new SaveListener<User>() {
+                                    @Override
+                                    public void done(User user, BmobException e) {
+                                        swipeRefreshLayout.setRefreshing(false);
+                                        if (e == null) {
+                                            AoApplication.showToast(R.string.sign_up_success);
+                                            finish();
+                                        } else {
+                                            AoApplication.showToast(e.toString());
+                                        }
+                                    }
+                                });
+                            } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                                //获取验证码成功
+                                AoApplication.showToast(R.string.code_send);
+                            } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+                                //返回支持发送验证码的国家列表
+                            }
+                        } else {
 
-                Message msg = new Message();
-                msg.arg1 = event;
-                msg.arg2 = result;
-                msg.obj = data;
+                            try {
+                                Throwable throwable = (Throwable) data;
+                                throwable.printStackTrace();
+                                JSONObject object = new JSONObject(throwable.getMessage());
+                                String des = object.optString("detail");//错误描述
+                                int status = object.optInt("status");//错误代码
+                                switch (status) {
+                                    case 468:
+                                        des = getString(R.string.code_error);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                AoApplication.showToast(des);
+                            } catch (JSONException e) {
+                                CrashReport.postCatchedException(e);
+                            }
 
-                System.out.println("result-----" + result);
-                System.out.println("data-----" + data);
-
-                handler.sendMessage(msg);
-
+                        }
+                    }
+                });
 
             }
         };
         SMSSDK.registerEventHandler(eh); //注册短信回调
-findViewById(R.id.sign_in_button).setOnClickListener(this);
-//        getCodeButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String phone = mEmailView.getText().toString();
-//                if (TextUtils.isEmpty(phone)) {
-//                    mEmailView.setError(getString(R.string.error_field_required));
-//                } else {
-//                    getCodeButton.setEnabled(false);
-//                    SMSSDK.getVerificationCode("86", phone);
-//                }
-//            }
-//        });
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
     }
-
-    Handler handler = new Handler() {
-
-        @Override
-        public void handleMessage(final Message msg) {
-            // TODO Auto-generated method stub
-            super.handleMessage(msg);
-            int event = msg.arg1;
-            int result = msg.arg2;
-            Object data = msg.obj;
-
-            swipeRefreshLayout.setRefreshing(false);
-            if (result == SMSSDK.RESULT_COMPLETE) {
-                //回调完成
-                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                    //提交验证码成功
-                    User user = new User();
-                    user.setUsername(phone);
-                    user.setPassword("123456");
-
-                    user.login(new SaveListener<User>() {
-                        @Override
-                        public void done(User user, BmobException e) {
-                            if (user != null) {
-                                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                                finish();
-                            } else {
-                                Message message = new Message();
-                                message.arg1 = 9;
-                                message.arg2 = SMSSDK.RESULT_COMPLETE;
-                                handler.sendMessage(message);
-
-                            }
-                        }
-                    });
-                } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-                    //获取验证码成功
-//                    getCodeButton.setEnabled(true);
-                    AoApplication.showToast(R.string.code_send);
-                } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
-                    //返回支持发送验证码的国家列表
-                    Log.d("--------", "_________");
-                } else if (event == 9) {
-                    User user = new User();
-                    user.setUsername(phone);
-                    user.setPassword("123456");
-                    user.signUp(new SaveListener<User>() {
-                        @Override
-                        public void done(User user, BmobException e) {
-                            if (user != null) {
-                                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                                finish();
-                            } else {
-                                AoApplication.showToast(e.toString());
-                            }
-                        }
-                    });
-                }
-            } else {
-                swipeRefreshLayout.setRefreshing(false);
-                try {
-                    JSONObject json = new JSONObject(((Throwable) data).getMessage());
-                    AoApplication.showToast(json.getString("detail"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-        }
-
-    };
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.get_code_text:
                 String phone = numberText.getText().toString();
                 if (TextUtils.isEmpty(phone)) {
                     numberText.setError(getString(R.string.error_field_required));
                 } else {
                     v.setEnabled(false);
+                    swipeRefreshLayout.setRefreshing(true);
                     SMSSDK.getVerificationCode("86", phone);
                 }
                 break;
@@ -208,20 +155,18 @@ findViewById(R.id.sign_in_button).setOnClickListener(this);
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-
-
         // Reset errors.
         numberText.setError(null);
+        codeText.setError(null);
         passwordText.setError(null);
 
         // Store values at the time of the login attempt.
         phone = numberText.getText().toString();
         code = codeText.getText().toString();
+        password = passwordText.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
-
-
         // Check for a valid email address.
         if (TextUtils.isEmpty(phone)) {
             numberText.setError(getString(R.string.error_field_required));
@@ -231,46 +176,18 @@ findViewById(R.id.sign_in_button).setOnClickListener(this);
             codeText.setError(getString(R.string.input_password));
             focusView = codeText;
             cancel = true;
+        } else if (TextUtils.isEmpty(password)) {
+            passwordText.setError(getString(R.string.input_password));
+            focusView = passwordText;
+            cancel = true;
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-//            showProgress(true);
             swipeRefreshLayout.setRefreshing(true);
-//            SMSSDK.submitVerificationCode("86", phone, code);
-            User user = new User();
-            user.setUsername(phone);
-            user.setPassword(code);
-            user.signUp(new SaveListener<User>() {
-                @Override
-                public void done(User user, BmobException e) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    if(e==null){
-                        AoApplication.showToast("注册成功:");
-                    }else{
-                        AoApplication.showToast(e.toString());
-                    }
-                }
-            });
+            SMSSDK.submitVerificationCode("86", phone, code);
 
-//            user.login(new SaveListener<User>() {
-//                @Override
-//                public void done(User user, BmobException e) {
-//                    swipeRefreshLayout.setRefreshing(false);
-//                    if (user != null) {
-//                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-//                        finish();
-//                    } else {
-//                        AoApplication.showToast(R.string.login_error);
-//
-//                    }
-//                }
-//            });
         }
     }
 

@@ -23,7 +23,10 @@
     <string name="error_field_required">请输入手机号码</string>
     <!--sign up-->
     <string name="prompt_code">验证码</string>
+    <string name="sign_up_success">注册成功，请登录</string>
+    <string name="sign_up_error">该用户已注册，请直接登录</string>
     <string name="prompt_password">请输入6-16位密码</string>
+    <string name="code_error">验证码错误，请重新输入</string>
     <!--setting-->
     <string name="mine">我的</string>
     <string name="setting">设置</string>

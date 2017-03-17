@@ -5,4 +5,6 @@ package com.kui.gou.util;
  */
 public class Constant {
     public static final int COUNT=7;
+    public static final String SMS_APP_KEY ="16f89e72e9f32";
+    public static final String SMS_APP_SECRET ="1672abf13cf56ac79ed75280d008eae9";
 }
