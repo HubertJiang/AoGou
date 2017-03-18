@@ -3,7 +3,7 @@
 
     <string name="goods">商品</string>
     <string name="all">全部</string>
-
+    <string name="no_network">网络不给力，请检查您的网络是否正常</string>
     <!-- Strings related to login -->
     <string name="prompt_email">手机号码</string>
     <string name="password">密码</string>
@@ -28,6 +28,7 @@
     <string name="prompt_password">请输入6-16位密码</string>
     <string name="prompt_re_password">请确认密码</string>
     <string name="reset_password">设置新密码</string>
+    <string name="prompt_password_not">两次输入密码不一致</string>
     <string name="code_error">验证码错误，请重新输入</string>
     <string name="resend_code">重新获取</string>
     <string name="can_resend_code">秒后重发</string>

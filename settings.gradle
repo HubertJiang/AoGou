@@ -1,1 +1,1 @@
-include ':app', ':multi-image-selector', ':IMKit'
+include ':app', ':multi-image-selector', ':sobotLibrary'

@@ -16,6 +16,12 @@
         android:clickable="false"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_launcher" />
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -46,17 +52,17 @@
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLength="16"
-                android:maxLines="1"/>
+                android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 
 
         <Button
             android:id="@+id/sign_in_button"
+            style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/action_sign_in"
-            style="@style/Button" />
+            android:text="@string/action_sign_in" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,7 +87,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/get_password"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/colorAccent"
+                android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

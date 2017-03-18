@@ -16,6 +16,8 @@ import com.kui.gou.adapter.ImageAdapter;
 import com.kui.gou.entity.Goods;
 import com.kui.gou.entity.User;
 import com.kui.gou.view.CirclePageIndicator;
+import com.sobot.chat.SobotApi;
+import com.sobot.chat.api.model.Information;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,6 @@ import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
-import io.rong.imkit.RongIM;
 
 public class GoodsDetailActivity extends AppCompatActivity implements View.OnClickListener {
     private String id;
@@ -129,8 +130,10 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
                 });
                 break;
             case R.id.service_text_view:
-                if (RongIM.getInstance() != null)
-                    RongIM.getInstance().startPrivateChat(this, "TLW7444p", getString(R.string.service));
+                Information info = new Information();
+                info.setAppkey("700bb6ffa0454fb3ba893bc49c55f383");
+                info.setColor("3F51B5");
+                SobotApi.startSobotChat(this, info);
                 break;
         }
     }

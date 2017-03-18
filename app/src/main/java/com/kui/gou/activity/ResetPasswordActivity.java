@@ -44,7 +44,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
         getSupportActionBar().setTitle(R.string.get_password);
         numberText = (EditText) findViewById(R.id.number);
         codeText = (EditText) findViewById(R.id.code);
-        passwordText = (EditText) findViewById(R.id.password);
+        passwordText = (EditText) findViewById(R.id.password_text);
         rePasswordText = (EditText) findViewById(R.id.re_password_text);
         nextButton = (Button) findViewById(R.id.next_button);
         sureButton = (Button) findViewById(R.id.sure_button);
@@ -54,7 +54,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
         getCode.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         sureButton.setOnClickListener(this);
-        timeCount=new TimeCount(getCode,getString(R.string.can_resend_code),R.string.resend_code);
+        timeCount = new TimeCount(getCode, getString(R.string.can_resend_code), R.string.resend_code);
 
         SMSSDK.initSDK(this, Constant.SMS_APP_KEY, Constant.SMS_APP_SECRET);
         EventHandler eh = new EventHandler() {
@@ -79,7 +79,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                                 //返回支持发送验证码的国家列表
                             }
                         } else {
-getCode.setEnabled(true);
+                            getCode.setEnabled(true);
                             try {
                                 Throwable throwable = (Throwable) data;
                                 throwable.printStackTrace();
@@ -122,31 +122,57 @@ getCode.setEnabled(true);
                 } else {
                     swipeRefreshLayout.setRefreshing(true);
                     SMSSDK.submitVerificationCode("86", phone, code);
+                    getSupportActionBar().setTitle(R.string.reset_password);
+                    viewFlipper.showNext();
                 }
                 break;
             case R.id.sure_button:
                 password = passwordText.getText().toString();
                 rePassword = rePasswordText.getText().toString();
                 if (TextUtils.isEmpty(password)) {
-
+                    passwordText.setError(getString(R.string.prompt_password));
+                    passwordText.requestFocus();
                 } else if (TextUtils.isEmpty(rePassword)) {
-
+                    rePasswordText.setError(getString(R.string.prompt_re_password));
+                    rePasswordText.requestFocus();
                 } else if (!password.equals(rePassword)) {
-
+                    AoApplication.showToast(R.string.prompt_password_not);
                 } else {
-                    BmobUser user = BmobUser.getCurrentUser();
-                    user.setPassword(password);
-                    user.update(new UpdateListener() {
+                    BmobUser.resetPasswordByEmail("xkjiang@yeah.net", new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
-                            if (e == null) {
-                                AoApplication.showToast("更新用户信息成功");
-                                finish();
-                            } else {
+                            if(e==null){
+
+                            }else{
                                 AoApplication.showToast("更新用户信息失败:" + e.getMessage());
                             }
                         }
                     });
+//                    BmobQuery<BmobUser> query = new BmobQuery<>();
+//                    query.addWhereEqualTo("username", phone);
+//                    query.findObjects(new FindListener<BmobUser>() {
+//                        @Override
+//                        public void done(List<BmobUser> object, BmobException e) {
+//                            if(e==null){
+//                                BmobUser user = new BmobUser();
+//                                user.setPassword(password);
+//                                user.update(object.get(0).getObjectId(),new UpdateListener() {
+//                                    @Override
+//                                    public void done(BmobException e) {
+//                                        if (e == null) {
+//                                            AoApplication.showToast("更新用户信息成功");
+//                                            finish();
+//                                        } else {
+//                                            AoApplication.showToast("更新用户信息失败:" + e.getMessage());
+//                                        }
+//                                    }
+//                                });
+//                            }else{
+//                                AoApplication.showToast("更新用户信息失败:" + e.getMessage());
+//                            }
+//                        }
+//                    });
+
                 }
                 break;
             case R.id.get_code_text:
