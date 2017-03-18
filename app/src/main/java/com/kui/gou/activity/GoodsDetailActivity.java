@@ -132,7 +132,7 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
             case R.id.service_text_view:
                 Information info = new Information();
                 info.setAppkey("700bb6ffa0454fb3ba893bc49c55f383");
-                info.setColor("3F51B5");
+                info.setColor("#3F51B5");
                 SobotApi.startSobotChat(this, info);
                 break;
         }
