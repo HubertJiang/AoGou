@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import com.kui.gou.R;
 import com.kui.gou.adapter.ClassifyAdapter;
 import com.kui.gou.entity.Classify;
+import com.kui.gou.fragment.FindFragment;
 import com.kui.gou.fragment.MainFragment;
 import com.kui.gou.fragment.SettingFragment;
 import com.kui.gou.util.BottomNavigationViewHelper;
@@ -64,12 +65,9 @@ public class MainActivity extends AppCompatActivity {
         }); // set the listener, to perform actions based on item selection
 
 
-        MainFragment mainFragment = new MainFragment();
-        SettingFragment settingFragment = new SettingFragment();
         fragments.add(new MainFragment());
+        fragments.add(new FindFragment());
         fragments.add(new SettingFragment());
-        fragments.add(mainFragment);
-        fragments.add(settingFragment);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -118,14 +116,11 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.goods:
                                 viewPager.setCurrentItem(0);
                                 break;
-                            case R.id.delete:
+                            case R.id.find:
                                 viewPager.setCurrentItem(1);
                                 break;
-                            case R.id.setting:
-                                viewPager.setCurrentItem(2);
-                                break;
                             case R.id.me:
-                                viewPager.setCurrentItem(3);
+                                viewPager.setCurrentItem(2);
                                 break;
 
                         }

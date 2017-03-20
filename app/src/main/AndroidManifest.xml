@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.kui.gou.activity.LoginActivity"
+            android:name="com.kui.gou.activity.SignInActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.kui.gou.activity.SignUpActivity"
@@ -62,6 +62,12 @@
             android:name="com.kui.gou.activity.LikesActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.kui.gou.activity.WeChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.kui.gou.activity.WebActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.kui.gou.activity.ImageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
@@ -72,9 +78,9 @@
             android:theme="@android:style/Theme.Translucent" />
 
         <receiver android:name=".listener.ServiceReceiver">
-            <intent-filter android:priority = "1000" >
-                <action android:name = "sobot_unreadCountBrocast" />
-            </intent-filter >
+            <intent-filter android:priority="1000">
+                <action android:name="sobot_unreadCountBrocast" />
+            </intent-filter>
         </receiver>
     </application>
 

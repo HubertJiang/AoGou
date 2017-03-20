@@ -4,36 +4,17 @@
     android:layout_height="match_parent"
     android:background="@color/bg"
     android:orientation="vertical"
-    tools:context="com.kui.gou.fragment.SettingFragment">
+    tools:context="com.kui.gou.fragment.FindFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/image_white"
-        android:orientation="horizontal"
-        android:padding="@dimen/activity_vertical_margin">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@mipmap/ic_avatar" />
-
-        <TextView
-            android:id="@+id/nickname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/image_white"
-            android:padding="@dimen/activity_vertical_margin" />
-    </LinearLayout>
 
     <TextView
-        android:id="@+id/likes"
+        android:id="@+id/we_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@color/image_white"
         android:padding="@dimen/activity_vertical_margin"
-        android:text="@string/my_likes" />
+        android:text="@string/we_chat" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,12 +36,5 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/exit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:background="@color/image_white"
-        android:padding="@dimen/activity_vertical_margin"
-        android:text="@string/exit" />
+
 </LinearLayout>

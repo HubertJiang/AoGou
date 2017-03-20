@@ -5,13 +5,10 @@
         android:icon="@mipmap/ic_action_shop"
         android:title="@string/goods" />
     <item
-        android:id="@+id/delete"
+        android:id="@+id/find"
         android:icon="@mipmap/ic_social_person"
         android:title="@string/find" />
-    <item
-        android:id="@+id/setting"
-        android:icon="@mipmap/ic_action_shop"
-        android:title="@string/ao" />
+
 
     <item
         android:id="@+id/me"

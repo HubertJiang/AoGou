@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="@dimen/activity_vertical_margin"
-    tools:context="com.kui.gou.activity.LoginActivity">
+    tools:context="com.kui.gou.activity.SignInActivity">
 
 
     <LinearLayout
@@ -17,10 +17,11 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_launcher" />
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:src="@mipmap/ic_avatar" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

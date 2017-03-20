@@ -44,7 +44,10 @@
     <string name="service">客服</string>
 
     <string name="ao">澳洲</string>
+
+    <!--find-->
     <string name="find">发现</string>
+    <string name="we_chat">微信精选</string>
 
     <string name="avatar">头像</string>
     <string name="nickname">昵称</string>
