@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kui.gou.R;
+import com.kui.gou.activity.CookActivity;
 import com.kui.gou.activity.WeChatActivity;
 
 
@@ -24,6 +25,7 @@ public class FindFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_find, container, false);
         view.findViewById(R.id.we_chat).setOnClickListener(this);
+        view.findViewById(R.id.cook).setOnClickListener(this);
         return view;
     }
 
@@ -35,8 +37,8 @@ public class FindFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), WeChatActivity.class));
                 break;
 
-            case R.id.message:
-
+            case R.id.cook:
+                startActivity(new Intent(getActivity(), CookActivity.class));
                 break;
         }
     }
