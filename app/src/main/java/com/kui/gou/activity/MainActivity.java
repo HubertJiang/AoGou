@@ -55,14 +55,14 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                ((MainFragment) getSupportFragmentManager().findFragmentByTag("goods")).refresh(adapter.getItem(position).getObjectId());
+                ((MainFragment) getSupportFragmentManager().findFragmentByTag("goods")).refresh(adapter.getItem(position).getObjectId());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        }); // set the listener, to perform actions based on item selection
+        });
 
 
         fragments.add(new MainFragment());

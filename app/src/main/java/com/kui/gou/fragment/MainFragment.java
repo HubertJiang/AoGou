@@ -47,7 +47,7 @@ public class MainFragment extends Fragment {
         recyclerView.addItemDecoration(new RecycleViewDivider(getActivity()));
         adapter = new MainAdapter(getActivity(), recyclerView, null);
         recyclerView.setAdapter(adapter);
-        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1, R.color.refresh_progress_2, R.color.refresh_progress_3);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
