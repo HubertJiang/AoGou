@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">澳购</string>
 
-    <string name="goods">商品</string>
+    <string name="goods">首页</string>
     <string name="all">全部</string>
     <string name="no_network">网络不给力，请检查您的网络是否正常</string>
     <!-- Strings related to login -->
