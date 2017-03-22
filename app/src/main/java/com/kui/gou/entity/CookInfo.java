@@ -7,4 +7,5 @@ package com.kui.gou.entity;
 public class CookInfo {
     public CookCategory categoryInfo;//": "0010001007",
 
+
 }

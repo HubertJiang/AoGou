@@ -68,6 +68,9 @@
             android:name="com.kui.gou.activity.CookActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.kui.gou.activity.CookDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.kui.gou.activity.WebActivity"
             android:screenOrientation="portrait" />
         <activity

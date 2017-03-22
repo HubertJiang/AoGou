@@ -1,6 +1,7 @@
 package com.kui.gou.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.kui.gou.R;
 import com.kui.gou.ViewHolder.MainViewHolder;
 import com.kui.gou.activity.AoApplication;
+import com.kui.gou.activity.CookDetailActivity;
 import com.kui.gou.entity.CookItem;
 
 import java.util.List;
@@ -42,10 +44,9 @@ public class CookAdapter extends BaseAdapter<CookItem> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent intent=new Intent(getContext(), WebActivity.class);
-//                    intent.putExtra("url",String.valueOf(data.get("sourceUrl")));
-//                    intent.putExtra("title",String.valueOf(data.get("title")));
-//                    getContext().startActivity(intent);
+                    Intent intent = new Intent(getContext(), CookDetailActivity.class);
+                    intent.putExtra("cook", data.recipe);
+                    getContext().startActivity(intent);
                 }
             });
         }
