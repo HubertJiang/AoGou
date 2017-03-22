@@ -62,7 +62,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         Button mEmailSignInButton = (Button) findViewById(R.id.sign_in_button);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
         swipeRefreshLayout.setEnabled(false);
         SMSSDK.initSDK(this, Constant.SMS_APP_KEY, Constant.SMS_APP_SECRET);

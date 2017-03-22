@@ -49,6 +49,7 @@
     <string name="find">发现</string>
     <string name="we_chat">微信精选</string>
     <string name="cook">菜谱大全</string>
+    <string name="cook_material">食材：%1$s</string>
 
     <string name="avatar">头像</string>
     <string name="nickname">昵称</string>

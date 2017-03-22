@@ -53,7 +53,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener {
         });
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
         swipeRefreshLayout.setEnabled(false);
         findViewById(R.id.sign_up).setOnClickListener(this);

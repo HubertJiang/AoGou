@@ -53,6 +53,7 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
 

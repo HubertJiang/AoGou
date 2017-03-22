@@ -3,6 +3,7 @@ package com.kui.gou.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,7 +14,6 @@ import com.kui.gou.entity.CookInfo;
 import com.kui.gou.util.Constant;
 import com.kui.gou.util.RetrofitFactory;
 import com.mob.mobapi.MobAPI;
-import com.mob.mobapi.apis.Cook;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import retrofit2.Callback;
 
 public class CookActivity extends BaseActivity {
 
-    private Cook api;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ViewPager viewPager;
     private CookPagerAdapter adapter;
 
@@ -36,14 +36,16 @@ public class CookActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_we_chat);
         MobAPI.initSDK(this, Constant.API_KEY);
-        api = (Cook) MobAPI.getAPI(Cook.NAME);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setEnabled(false);
         getSupportActionBar().setTitle(R.string.cook);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         adapter = new CookPagerAdapter(getSupportFragmentManager());
-
+        swipeRefreshLayout.setRefreshing(true);
         RetrofitFactory.getInstance().getCookCategory(Constant.API_KEY).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
+                swipeRefreshLayout.setRefreshing(false);
                 if (response.body().retCode == 200) {
                     Gson gson = new Gson();
                     List<CookInfo> data =
@@ -62,27 +64,10 @@ public class CookActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
                 AoApplication.showToast(R.string.no_network);
             }
         });
-
-
-//        api.queryCategory(new APICallback() {
-//            @Override
-//            public void onSuccess(API api, int i, Map<String, Object> result) {
-//                result = (Map<String, Object>) result.get("result");
-//                ArrayList<HashMap<String, Object>> list = (ArrayList<HashMap<String, Object>>) result.get("childs");
-//                ArrayList<HashMap<String, Object>> data = (ArrayList<HashMap<String, Object>>) list.get(0).get("childs");
-//                adapter.setData(data);
-//                viewPager.setAdapter(adapter);
-//            }
-//
-//            @Override
-//            public void onError(API api, int i, Throwable throwable) {
-//
-//            }
-//        });
-
     }
 
 

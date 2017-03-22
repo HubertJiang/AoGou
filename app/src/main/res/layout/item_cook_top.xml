@@ -11,10 +11,17 @@
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_text"
+        android:padding="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/detail_title" />
+
     <TextView
         android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:textColor="@color/secondary_text" />
 </LinearLayout>

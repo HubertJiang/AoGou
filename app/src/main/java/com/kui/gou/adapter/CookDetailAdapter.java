@@ -56,7 +56,7 @@ public class CookDetailAdapter extends BaseAdapter<CookStep> {
         if (holder instanceof CookTopViewHolder) {
             CookTopViewHolder weChatViewHolder = (CookTopViewHolder) holder;
             weChatViewHolder.text.setText(cook.sumary);
-            weChatViewHolder.content.setText(cook.ingredients);
+            weChatViewHolder.content.setText(getContext().getString(R.string.cook_material,cook.ingredients));
             weChatViewHolder.imageView.setImageResource(android.R.color.transparent);
             if (!TextUtils.isEmpty(cook.img))
                 Glide.with(AoApplication.getInstance()).load(cook.img).placeholder(android.R.color.transparent).into(weChatViewHolder.imageView);

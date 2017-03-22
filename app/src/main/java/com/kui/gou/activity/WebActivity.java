@@ -28,6 +28,7 @@ public class WebActivity extends BaseActivity {
         getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
         webView = (WebView) findViewById(R.id.web_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);

@@ -42,6 +42,7 @@ public class WeChatFragment extends Fragment implements APICallback {
         api = (WxArticle) MobAPI.getAPI(WxArticle.NAME);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new RecycleViewDivider(getActivity()));
         adapter = new WeChatAdapter(getActivity(), recyclerView, null);

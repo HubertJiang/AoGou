@@ -39,6 +39,7 @@ public class LikesActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.my_likes);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new RecycleViewDivider(this));
         adapter = new MainAdapter(this, recyclerView, null);
