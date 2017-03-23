@@ -10,12 +10,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.kui.gou.R;
+import com.kui.gou.activity.AoApplication;
 import com.kui.gou.adapter.MainAdapter;
 import com.kui.gou.entity.Classify;
 import com.kui.gou.entity.Goods;
+import com.kui.gou.listener.OnLoadMoreListener;
 import com.kui.gou.util.Constant;
 import com.kui.gou.view.RecycleViewDivider;
 
@@ -33,7 +34,7 @@ public class MainFragment extends Fragment {
     private RecyclerView recyclerView;
     private MainAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private int lastVisibleItem, page;
+    private int  page;
     private boolean hasMore;
     private String id;
 
@@ -52,57 +53,65 @@ public class MainFragment extends Fragment {
             @Override
             public void onRefresh() {
                 page = 0;
-                get();
+                get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
             }
         });
 
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView,
+//                                             int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                if (hasMore && newState == RecyclerView.SCROLL_STATE_IDLE
+//                        && lastVisibleItem + 1 == adapter.getItemCount()) {
+//                    swipeRefreshLayout.setRefreshing(true);
+//                    get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+//                }
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+//            }
+//        });
 
+        adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView,
-                                             int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (hasMore && newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastVisibleItem + 1 == adapter.getItemCount()) {
-                    swipeRefreshLayout.setRefreshing(true);
-                    get();
+            public void onLoadMore() {
+                if (hasMore) {
+                    adapter.addNull();
+                    get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
                 }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
             }
         });
         swipeRefreshLayout.setRefreshing(true);
-        get();
+        get(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         return view;
     }
 
     public void refresh(String id) {
         if (this.id == id)
             return;
+        swipeRefreshLayout.setRefreshing(true);
         page = 0;
         this.id = id;
-        get();
+        get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
     }
 
-    private void get() {
+    private void get(BmobQuery.CachePolicy cachePolicy) {
         BmobQuery<Goods> query = new BmobQuery<>();
-//        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
+        query.setCachePolicy(cachePolicy);
         query.addQueryKeys("name,content,image,price");
         if (!TextUtils.isEmpty(id)) {
             Classify classify = new Classify();
             classify.setObjectId(id);
             query.addWhereEqualTo("type", new BmobPointer(classify));
         }
-//查询playerName叫“比目”的数据
-//返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(Constant.COUNT);
         query.setSkip(Constant.COUNT * page);
-//执行查询方法
         query.findObjects(new FindListener<Goods>() {
             @Override
             public void done(List<Goods> object, BmobException e) {
@@ -116,11 +125,14 @@ public class MainFragment extends Fragment {
                     if (page == 0) {
                         adapter.setData(object);
                     } else {
+                        adapter.deleteNull();
                         adapter.addAll(object);
                     }
+                    adapter.setLoaded();
                     page++;
                 } else {
-                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                    adapter.setLoaded();
+                    AoApplication.showToast(e.toString());
                 }
             }
         });

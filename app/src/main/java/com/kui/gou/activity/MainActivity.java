@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private BottomNavigationView bottomNavigationView;
     private MenuItem prevMenuItem;
+    private MainFragment mainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,27 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         spinner = (Spinner) findViewById(R.id.spinner);
-
-        adapter = new ClassifyAdapter(this, R.layout.title_spinner);
-        adapter.setDropDownViewResource(R.layout.item_classify);
-
-        spinner.setAdapter(adapter); // set the adapter to provide layout of rows and content
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                ((MainFragment) getSupportFragmentManager().findFragmentByTag("goods")).refresh(adapter.getItem(position).getObjectId());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        fragments.add(new MainFragment());
+        mainFragment = new MainFragment();
+        fragments.add(mainFragment);
         fragments.add(new FindFragment());
         fragments.add(new SettingFragment());
 
@@ -100,6 +83,16 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNavigationView.getMenu().getItem(position);
 
+                switch (position) {
+                    case 0:
+                        getSupportActionBar().setDisplayShowTitleEnabled(false);
+                        spinner.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        getSupportActionBar().setDisplayShowTitleEnabled(true);
+                        spinner.setVisibility(View.GONE);
+                        break;
+                }
             }
 
             @Override
@@ -107,7 +100,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        adapter = new ClassifyAdapter(this, R.layout.title_spinner);
+        adapter.setDropDownViewResource(R.layout.item_classify);
 
+        spinner.setAdapter(adapter); // set the adapter to provide layout of rows and content
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mainFragment.refresh(adapter.getItem(position).getObjectId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -128,9 +135,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         spinner.setVisibility(View.VISIBLE);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         get();
     }
 

@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.kui.gou.listener.OnLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
-//    private OnLoadMoreListener onLoadMoreListener;
+    private OnLoadMoreListener onLoadMoreListener;
 //    private OnScrollListener onScrollListener;
 
     public BaseAdapter(Context context, RecyclerView recyclerView, List<T> data) {
@@ -40,9 +41,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
                                     .findLastVisibleItemPosition();
                             if (!loading
                                     && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-//                                if (onLoadMoreListener != null) {
-//                                    onLoadMoreListener.onLoadMore();
-//                                }
+                                if (onLoadMoreListener != null) {
+                                    onLoadMoreListener.onLoadMore();
+                                }
                                 loading = true;
                             }
                         }
@@ -54,9 +55,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 //        this.onScrollListener = onScrollListener;
 //    }
 //
-//    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-//        this.onLoadMoreListener = onLoadMoreListener;
-//    }
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
 
     public void setData(List<T> data) {
         this.data = data;
