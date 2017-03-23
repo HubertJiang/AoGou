@@ -10,12 +10,15 @@ import android.widget.TextView;
 
 import com.kui.gou.R;
 import com.kui.gou.activity.LikesActivity;
+import com.kui.gou.activity.SignInActivity;
 import com.sobot.chat.SobotApi;
 
 import cn.bmob.v3.BmobUser;
 
 
 public class SettingFragment extends Fragment implements View.OnClickListener {
+
+    private Intent intent;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -30,7 +33,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.likes).setOnClickListener(this);
         view.findViewById(R.id.exit).setOnClickListener(this);
         view.findViewById(R.id.message).setOnClickListener(this);
-        ((TextView)view.findViewById(R.id.count_text)).setText(SobotApi.getUnreadMsg(getActivity())+"");
+        view.findViewById(R.id.user).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.count_text)).setText(SobotApi.getUnreadMsg(getActivity()) + "");
         return view;
     }
 
@@ -48,6 +52,16 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             case R.id.message:
 
                 break;
+            case R.id.user:
+                if (BmobUser.getCurrentUser() == null) {
+                    intent = new Intent(getActivity(), SignInActivity.class);
+                } else {
+
+                }
+                break;
+        }
+        if (intent != null) {
+            startActivity(intent);
         }
     }
 }

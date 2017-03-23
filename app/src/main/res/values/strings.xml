@@ -51,6 +51,8 @@
     <string name="cook">菜谱大全</string>
     <string name="cook_material">食材：%1$s</string>
 
+    <!--information-->
+    <string name="sign_in_hint">请点击登录</string>
     <string name="avatar">头像</string>
     <string name="nickname">昵称</string>
     <string name="usual_address">我的地址</string>
