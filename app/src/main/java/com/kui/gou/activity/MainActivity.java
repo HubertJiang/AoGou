@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -129,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.me:
                                 viewPager.setCurrentItem(2);
                                 break;
-
                         }
                         return false;
                     }
@@ -143,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void get() {
         BmobQuery<Classify> query = new BmobQuery<>();
-        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
+        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.findObjects(new FindListener<Classify>() {
             @Override
             public void done(List<Classify> list, BmobException e) {

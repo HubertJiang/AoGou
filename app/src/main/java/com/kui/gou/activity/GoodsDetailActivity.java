@@ -17,6 +17,7 @@ import com.kui.gou.entity.Goods;
 import com.kui.gou.entity.User;
 import com.kui.gou.view.CirclePageIndicator;
 import com.sobot.chat.SobotApi;
+import com.sobot.chat.api.model.ConsultingContent;
 import com.sobot.chat.api.model.Information;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1, R.color.refresh_progress_2, R.color.refresh_progress_3);
         swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
 
@@ -134,6 +135,21 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
                 Information info = new Information();
                 info.setAppkey("700bb6ffa0454fb3ba893bc49c55f383");
                 info.setColor("#3F51B5");
+
+                //咨询内容
+                ConsultingContent consultingContent = new ConsultingContent();
+//咨询内容标题，必填
+                consultingContent.setSobotGoodsTitle(goods.name);
+//咨询内容图片，选填 但必须是图片地址
+                consultingContent.setSobotGoodsImgUrl(goods.image.getFileUrl());
+//描述，选填
+                consultingContent.setSobotGoodsDescribe(goods.content);
+//标签，选填
+                consultingContent.setSobotGoodsLable(goods.price+"");
+//可以设置为null
+                info.setConsultingContent(consultingContent);
+
+
                 SobotApi.startSobotChat(this, info);
                 break;
         }
