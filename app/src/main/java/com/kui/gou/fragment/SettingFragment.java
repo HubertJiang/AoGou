@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kui.gou.R;
+import com.kui.gou.activity.InformationActivity;
 import com.kui.gou.activity.LikesActivity;
 import com.kui.gou.activity.SignInActivity;
 import com.sobot.chat.SobotApi;
@@ -56,7 +57,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 if (BmobUser.getCurrentUser() == null) {
                     intent = new Intent(getActivity(), SignInActivity.class);
                 } else {
-
+                    intent = new Intent(getActivity(), InformationActivity.class);
                 }
                 break;
         }

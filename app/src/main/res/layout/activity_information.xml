@@ -5,21 +5,20 @@
     android:background="@color/bg"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/top"
-        layout="@layout/view_top" />
-
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/top"
-        android:layout_marginTop="20dp"
-        android:background="@color/image_white">
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <TableRow
             android:id="@+id/avatar"
+            android:background="@color/image_white"
             android:gravity="center_vertical"
-            android:padding="8dp">
+            android:paddingBottom="@dimen/eight"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/eight">
 
             <TextView
                 android:layout_width="0dp"
@@ -27,7 +26,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:text="@string/avatar"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/primary_text" />
 
 
             <ImageView
@@ -35,22 +34,17 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher" />
-
+                android:src="@mipmap/ic_avatar" />
 
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="8dp"
-            android:background="@color/bg" />
 
         <TableRow
             android:id="@+id/nickname"
+            android:layout_marginTop="@dimen/one"
+            android:background="@color/image_white"
             android:gravity="center_vertical"
-            android:padding="8dp">
-
+            android:padding="@dimen/activity_vertical_margin">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -65,21 +59,43 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/content" />
 
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="8dp"
-            android:background="@color/bg" />
+        <TableRow
+            android:id="@+id/gender"
+            android:layout_marginTop="@dimen/one"
+            android:background="@color/image_white"
+            android:gravity="center_vertical"
+            android:padding="@dimen/activity_vertical_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/gender"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/gender_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:maxLines="1"
+                android:textColor="@color/content" />
+
+        </TableRow>
+
 
         <TableRow
             android:id="@+id/address"
+            android:layout_marginTop="@dimen/one"
+            android:background="@color/image_white"
             android:gravity="center_vertical"
-            android:padding="8dp">
+            android:padding="@dimen/activity_vertical_margin">
 
 
             <TextView
@@ -95,40 +111,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="@string/usual_address"
                 android:textColor="@color/content" />
 
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="8dp"
-            android:background="@color/bg" />
 
-        <TableRow
-            android:id="@+id/signature"
-            android:gravity="center_vertical"
-            android:padding="8dp">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="@string/signature"
-                android:textColor="@android:color/black" />
-
-            <TextView
-                android:id="@+id/signatureTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:maxLines="1"
-                android:textColor="@color/content" />
-
-        </TableRow>
     </TableLayout>
 
 </RelativeLayout>

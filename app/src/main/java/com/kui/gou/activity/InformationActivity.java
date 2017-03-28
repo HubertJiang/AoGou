@@ -6,8 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,8 +34,8 @@ import static android.Manifest.permission.CAMERA;
 /**
  * Created by Administrator on 2015/3/6.
  */
-public class InformationActivity extends AppCompatActivity implements View.OnClickListener {
-    private TextView addressTextView, signatureTextView, nicknameTextView;
+public class InformationActivity extends BaseActivity implements View.OnClickListener {
+    private TextView addressTextView, genderTextView, nicknameTextView;
     private String avatar, cropImagePath;
     private ImageView avatarImageView;
     private String imagePath;
@@ -51,26 +49,22 @@ public class InformationActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_information);
         initialize();
 
-//        addressTextView.setText(Application.getUser().provincename + Application.getUser().cityname);
-//        signatureTextView.setText(Application.getUser().shortdesc);
         nicknameTextView.setText(user.getNickname());
+        genderTextView.setText(user.getEmail());
+        addressTextView.setText(user.getNickname());
+        if(user.getAvatar()!=null)
         Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImageView);
-        findViewById(R.id.signature).setOnClickListener(this);
         findViewById(R.id.address).setOnClickListener(this);
         findViewById(R.id.avatar).setOnClickListener(this);
         findViewById(R.id.nickname).setOnClickListener(this);
     }
 
     private void initialize() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.information);
         addressTextView = (TextView) findViewById(R.id.addressTextView);
-        signatureTextView = (TextView) findViewById(R.id.signatureTextView);
+        genderTextView = (TextView) findViewById(R.id.gender_text);
         nicknameTextView = (TextView) findViewById(R.id.nicknameTextView);
         avatarImageView = (ImageView) findViewById(R.id.avatarImageView);
-
         user = BmobUser.getCurrentUser(User.class);
     }
 
