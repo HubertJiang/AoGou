@@ -9,28 +9,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kui.gou.R;
 import com.kui.gou.activity.AoApplication;
 import com.kui.gou.adapter.WeChatAdapter;
+import com.kui.gou.entity.ApiResponse;
+import com.kui.gou.entity.WeChat;
+import com.kui.gou.listener.OnLoadMoreListener;
 import com.kui.gou.util.Constant;
+import com.kui.gou.util.RetrofitFactory;
 import com.kui.gou.view.RecycleViewDivider;
-import com.mob.mobapi.API;
-import com.mob.mobapi.APICallback;
-import com.mob.mobapi.MobAPI;
-import com.mob.mobapi.apis.WxArticle;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
-public class WeChatFragment extends Fragment implements APICallback {
+public class WeChatFragment extends Fragment implements Callback<ApiResponse> {
     private RecyclerView recyclerView;
     private WeChatAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean hasMore;
-    private WxArticle api;
-    private int lastVisibleItem, page;
+    private int  page;
     private String id = "1";
 
     @Override
@@ -39,10 +43,9 @@ public class WeChatFragment extends Fragment implements APICallback {
         View view = inflater.inflate(R.layout.view_recycler, container, false);
         Bundle args = getArguments();
         id = args.getString("index");
-        api = (WxArticle) MobAPI.getAPI(WxArticle.NAME);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1, R.color.refresh_progress_2, R.color.refresh_progress_3);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new RecycleViewDivider(getActivity()));
         adapter = new WeChatAdapter(getActivity(), recyclerView, null);
@@ -54,24 +57,14 @@ public class WeChatFragment extends Fragment implements APICallback {
                 get();
             }
         });
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
+        adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView,
-                                             int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (hasMore && newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastVisibleItem + 1 == adapter.getItemCount()) {
-                    swipeRefreshLayout.setRefreshing(true);
+            public void onLoadMore() {
+                if (hasMore) {
+                    adapter.addNull();
                     page++;
                     get();
                 }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
             }
         });
         swipeRefreshLayout.setRefreshing(true);
@@ -80,15 +73,14 @@ public class WeChatFragment extends Fragment implements APICallback {
     }
 
     private void get() {
-        api.searchArticleList(id, page + 1, Constant.COUNT, this);
+        RetrofitFactory.getInstance().getWeChat(Constant.API_KEY, id, page + 1, Constant.COUNT).enqueue(this);
     }
 
     @Override
-    public void onSuccess(API api, int i, Map<String, Object> result) {
+    public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
         swipeRefreshLayout.setRefreshing(false);
-        if (result.get("retCode").equals("200")) {
-            result = (Map<String, Object>) result.get("result");
-            int total = (int) result.get("total");
+        if (response.body().retCode == 200) {
+            int total = response.body().result.getAsJsonObject().get("total").getAsInt();
             int totalPage = total / Constant.COUNT;
             if (total % Constant.COUNT > 0) {
                 totalPage += 1;
@@ -98,16 +90,20 @@ public class WeChatFragment extends Fragment implements APICallback {
             } else {
                 hasMore = false;
             }
-            ArrayList<HashMap<String, Object>> resultList = (ArrayList<HashMap<String, Object>>) result.get("list");
+            Gson gson = new Gson();
+            ArrayList<WeChat> resultList = gson.fromJson(
+                    response.body().result.getAsJsonObject().get("list").getAsJsonArray(),
+                    new TypeToken<List<WeChat>>() {
+                    }.getType
+                            ());
             adapter.addAll(resultList);
         } else {
             AoApplication.showToast(R.string.no_network);
         }
-
     }
 
     @Override
-    public void onError(API api, int i, Throwable throwable) {
+    public void onFailure(Call<ApiResponse> call, Throwable t) {
         swipeRefreshLayout.setRefreshing(false);
         AoApplication.showToast(R.string.no_network);
     }

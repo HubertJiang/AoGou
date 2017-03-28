@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.kui.gou.entity.WeChat;
 import com.kui.gou.fragment.WeChatFragment;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,9 +19,9 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
-    private List<HashMap<String, Object>> data;
+    private List<WeChat> data;
 
-    public void setData(List<HashMap<String, Object>> data) {
+    public void setData(List<WeChat> data) {
         this.data = data;
     }
 
@@ -29,7 +29,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int i) {
         Fragment fragment = new WeChatFragment();
         Bundle args = new Bundle();
-        args.putString("index", (String) data.get(i).get("cid"));
+        args.putString("index", data.get(i).cid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,6 +41,6 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return (CharSequence) data.get(position).get("name");
+        return data.get(position).name;
     }
 }

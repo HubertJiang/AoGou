@@ -21,16 +21,19 @@ import retrofit2.http.Query;
 public interface CashService {
 
 
-    @GET("http://apicloud.mob.com/v1/cook/category/query" )
+    @GET("http://apicloud.mob.com/v1/cook/category/query")
     Call<ApiResponse> getCookCategory(@Query("key") String appKey);
-    @GET("http://apicloud.mob.com/v1/cook/menu/search" )
-    Call<ApiResponse> getCook(@Query("key") String appKey,@Query("cid") String cid,
-                                      @Query("page") int page,@Query("size") int size);
 
-//    @GET("https://api.weixin.qq.com/sns/userinfo")
-//    Call<WeChatUser> getWeChatUser(@Query("access_token") String token, @Query("openid") String id);
+    @GET("http://apicloud.mob.com/v1/cook/menu/search")
+    Call<ApiResponse> getCook(@Query("key") String appKey, @Query("cid") String cid,
+                              @Query("page") int page, @Query("size") int size);
 
+    @GET("http://apicloud.mob.com/wx/article/category/query")
+    Call<ApiResponse> getWeChatCategory(@Query("key") String appKey);
 
+    @GET("http://apicloud.mob.com/wx/article/search")
+    Call<ApiResponse> getWeChat(@Query("key") String appKey, @Query("cid") String cid,
+                                        @Query("page") int page, @Query("size") int size);
 
 
     /**

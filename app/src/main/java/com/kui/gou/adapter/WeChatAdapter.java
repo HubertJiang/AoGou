@@ -8,40 +8,48 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kui.gou.R;
+import com.kui.gou.ViewHolder.LoadingViewHolder;
 import com.kui.gou.ViewHolder.WeChatViewHolder;
 import com.kui.gou.activity.WebActivity;
+import com.kui.gou.entity.WeChat;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by jiangkuiyuan on 16/9/4.
  */
-public class WeChatAdapter extends BaseAdapter<HashMap<String, Object>> {
-    public WeChatAdapter(Context context, RecyclerView recyclerView, List<HashMap<String, Object>> data) {
+public class WeChatAdapter extends BaseAdapter<WeChat> {
+    public WeChatAdapter(Context context, RecyclerView recyclerView, List<WeChat> data) {
         super(context, recyclerView, data);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_we_chat, parent, false);
-        return new WeChatViewHolder(view);
+        if (viewType == 0) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.item_loading, parent, false);
+            return new LoadingViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.item_we_chat, parent, false);
+            return new WeChatViewHolder(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof WeChatViewHolder) {
-            WeChatViewHolder weChatViewHolder= (WeChatViewHolder) holder;
-            final HashMap<String, Object> data = getItem(position);
-            weChatViewHolder.time.setText(String.valueOf(data.get("pubTime")));
-            weChatViewHolder.title.setText(String.valueOf(data.get("title")));
+        if (holder instanceof LoadingViewHolder) {
+            ((LoadingViewHolder) holder).loading.setVisibility(View.VISIBLE);
+        } else if (holder instanceof WeChatViewHolder) {
+            WeChatViewHolder weChatViewHolder = (WeChatViewHolder) holder;
+            final WeChat data = getItem(position);
+            weChatViewHolder.time.setText(data.pubTime);
+            weChatViewHolder.title.setText(data.title);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(getContext(), WebActivity.class);
-                    intent.putExtra("url",String.valueOf(data.get("sourceUrl")));
-                    intent.putExtra("title",String.valueOf(data.get("title")));
+                    Intent intent = new Intent(getContext(), WebActivity.class);
+                    intent.putExtra("url", data.sourceUrl);
+                    intent.putExtra("title", data.title);
                     getContext().startActivity(intent);
                 }
             });

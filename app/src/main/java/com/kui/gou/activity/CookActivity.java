@@ -13,7 +13,6 @@ import com.kui.gou.entity.ApiResponse;
 import com.kui.gou.entity.CookInfo;
 import com.kui.gou.util.Constant;
 import com.kui.gou.util.RetrofitFactory;
-import com.mob.mobapi.MobAPI;
 
 import java.util.List;
 
@@ -35,7 +34,6 @@ public class CookActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_we_chat);
-        MobAPI.initSDK(this, Constant.API_KEY);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setEnabled(false);
         getSupportActionBar().setTitle(R.string.cook);

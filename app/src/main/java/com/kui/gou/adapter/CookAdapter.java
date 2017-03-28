@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.kui.gou.R;
+import com.kui.gou.ViewHolder.LoadingViewHolder;
 import com.kui.gou.ViewHolder.MainViewHolder;
 import com.kui.gou.activity.AoApplication;
 import com.kui.gou.activity.CookDetailActivity;
@@ -27,13 +28,20 @@ public class CookAdapter extends BaseAdapter<CookItem> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_cook, parent, false);
-        return new MainViewHolder(view);
+        if (viewType == 0) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.item_loading, parent, false);
+            return new LoadingViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.item_cook, parent, false);
+            return new MainViewHolder(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof MainViewHolder) {
+        if (holder instanceof LoadingViewHolder) {
+            ((LoadingViewHolder) holder).loading.setVisibility(View.VISIBLE);
+        } else if (holder instanceof MainViewHolder) {
             MainViewHolder weChatViewHolder = (MainViewHolder) holder;
             final CookItem data = getItem(position);
             weChatViewHolder.name.setText(data.name);
