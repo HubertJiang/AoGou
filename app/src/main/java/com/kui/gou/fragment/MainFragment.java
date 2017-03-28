@@ -34,7 +34,7 @@ public class MainFragment extends Fragment {
     private RecyclerView recyclerView;
     private MainAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private int  page;
+    private int page;
     private boolean hasMore;
     private String id;
 
@@ -57,26 +57,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView,
-//                                             int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                if (hasMore && newState == RecyclerView.SCROLL_STATE_IDLE
-//                        && lastVisibleItem + 1 == adapter.getItemCount()) {
-//                    swipeRefreshLayout.setRefreshing(true);
-//                    get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-//            }
-//        });
 
         adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override

@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import com.kui.gou.R;
 import com.kui.gou.adapter.MainAdapter;
 import com.kui.gou.entity.Goods;
+import com.kui.gou.listener.OnLoadMoreListener;
 import com.kui.gou.util.Constant;
 import com.kui.gou.view.RecycleViewDivider;
 
@@ -25,7 +26,7 @@ public class LikesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MainAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private int lastVisibleItem, page;
+    private int  page;
     private boolean hasMore;
 
     @Override
@@ -39,7 +40,7 @@ public class LikesActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.my_likes);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2,R.color.refresh_progress_3);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1, R.color.refresh_progress_2, R.color.refresh_progress_3);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new RecycleViewDivider(this));
         adapter = new MainAdapter(this, recyclerView, null);
@@ -54,24 +55,13 @@ public class LikesActivity extends AppCompatActivity {
             }
         });
 
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
+        adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView,
-                                             int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (hasMore && newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastVisibleItem + 1 == adapter.getItemCount()) {
-                    swipeRefreshLayout.setRefreshing(true);
+            public void onLoadMore() {
+                if (hasMore) {
+                    adapter.addNull();
                     get();
                 }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
             }
         });
         swipeRefreshLayout.setRefreshing(true);
@@ -100,8 +90,10 @@ public class LikesActivity extends AppCompatActivity {
                     if (page == 0) {
                         adapter.setData(object);
                     } else {
+                        adapter.deleteNull();
                         adapter.addAll(object);
                     }
+                    adapter.setLoaded();
                     page++;
                 } else {
                     AoApplication.showToast(e.toString());
