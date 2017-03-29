@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     list.add(0, classify);
                     adapter.setObjects(list);
                 } else {
-                    AoApplication.showToast(e.toString());
+                    AoApplication.showToast(R.string.no_network);
                 }
             }
         });

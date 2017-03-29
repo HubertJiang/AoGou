@@ -96,7 +96,6 @@ public class SignInActivity extends BaseActivity implements OnClickListener {
                 public void done(User user, BmobException e) {
                     swipeRefreshLayout.setRefreshing(false);
                     if (user != null) {
-                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
                         finish();
                     } else {
                         AoApplication.showToast(R.string.login_error);

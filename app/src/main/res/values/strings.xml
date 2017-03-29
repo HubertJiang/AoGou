@@ -4,10 +4,14 @@
     <string name="goods">首页</string>
     <string name="all">全部</string>
     <string name="no_network">网络不给力，请检查您的网络是否正常</string>
+
+    <!--permission-->
+    <string name="permission">权限申请</string>
+    <string name="go_set">去设置</string>
+    <string name="permission_sd_hint">在设置-应用-澳购-权限中开启存储空间权限，以正常使用澳购功能</string>
     <!-- Strings related to login -->
     <string name="prompt_email">手机号码</string>
     <string name="password">密码</string>
-
     <string name="action_sign_in">登录</string>
     <string name="sign_up">注册</string>
     <string name="get_password">忘记密码</string>

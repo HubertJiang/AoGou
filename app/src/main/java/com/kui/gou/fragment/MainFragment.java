@@ -112,7 +112,7 @@ public class MainFragment extends Fragment {
                     page++;
                 } else {
                     adapter.setLoaded();
-                    AoApplication.showToast(e.toString());
+                    AoApplication.showToast(R.string.no_network);
                 }
             }
         });
