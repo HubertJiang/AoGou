@@ -57,8 +57,9 @@
                 android:id="@+id/nicknameTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="end"
                 android:maxLines="1"
                 android:textColor="@color/content" />
 
@@ -83,7 +84,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="end"
                 android:maxLines="1"
                 android:textColor="@color/content" />
 
@@ -109,8 +110,11 @@
                 android:id="@+id/addressTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
                 android:textColor="@color/content" />
 
         </TableRow>
@@ -121,9 +125,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@color/image_white"
-            android:textColor="@color/primary_text"
             android:padding="@dimen/activity_vertical_margin"
-            android:text="@string/exit" />
+            android:text="@string/exit"
+            android:textColor="@color/primary_text" />
 
     </TableLayout>
 

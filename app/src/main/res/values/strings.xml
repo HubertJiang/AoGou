@@ -60,6 +60,8 @@
     <string name="avatar">头像</string>
     <string name="nickname">昵称</string>
     <string name="gender">性别</string>
+    <string name="men">男</string>
+    <string name="women">女</string>
     <string name="usual_address">我的地址</string>
     <string name="signature">个人简介</string>
     <string name="information">个人信息</string>

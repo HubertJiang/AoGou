@@ -9,6 +9,8 @@ import cn.bmob.v3.datatype.BmobRelation;
  */
 public class User extends BmobUser {
     private String nickname;
+    private String address;
+    private String gender;
     private BmobFile avatar;
     private BmobRelation likes;
 
@@ -34,5 +36,21 @@ public class User extends BmobUser {
 
     public void setLikes(BmobRelation likes) {
         this.likes = likes;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

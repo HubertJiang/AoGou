@@ -20,21 +20,21 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
 
-public class ModifyNicknameActivity extends BaseActivity {
+public class ModifyAddressActivity extends BaseActivity {
     private EditText editText;
-    private String nickname;
+    private String address;
     private MenuItem saveItem;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modify_nickname);
-        nickname = getIntent().getStringExtra("nickname");
+        setContentView(R.layout.activity_modify_address);
+        address = getIntent().getStringExtra("address");
         editText = (EditText) findViewById(R.id.editText);
-        if (!TextUtils.isEmpty(nickname)) {
-            editText.setText(nickname);
-            editText.setSelection(editText.getText().length());
+        if (!TextUtils.isEmpty(address)) {
+            editText.setText(address);
+            editText.setSelection(address.length());
         }
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -61,7 +61,7 @@ public class ModifyNicknameActivity extends BaseActivity {
 
     private void modify() {
         User newUser = new User();
-        newUser.setNickname(nickname);
+        newUser.setAddress(address);
         BmobUser bmobUser = BmobUser.getCurrentUser();
         newUser.update(bmobUser.getObjectId(), new UpdateListener() {
             @Override
@@ -69,7 +69,7 @@ public class ModifyNicknameActivity extends BaseActivity {
                 saveItem.setEnabled(true);
                 if (e == null) {
                     Intent intent = new Intent();
-                    intent.putExtra("nickname", nickname);
+                    intent.putExtra("address", address);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
@@ -96,8 +96,8 @@ public class ModifyNicknameActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                nickname = editText.getText().toString();
-                if (TextUtils.isEmpty(nickname)) {
+                address = editText.getText().toString();
+                if (TextUtils.isEmpty(address)) {
                 } else {
                     saveItem.setEnabled(false);
                     modify();
