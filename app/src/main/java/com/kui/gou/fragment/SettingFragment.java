@@ -42,7 +42,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         avatarImage = (ImageView) view.findViewById(R.id.avatar_image);
         nicknameText = (TextView) view.findViewById(R.id.nickname);
 
-        ((TextView) view.findViewById(R.id.count_text)).setText(SobotApi.getUnreadMsg(getActivity()) + "");
+//        ((TextView) view.findViewById(R.id.count_text)).setText(SobotApi.getUnreadMsg(getActivity()) + "");
         return view;
     }
 
