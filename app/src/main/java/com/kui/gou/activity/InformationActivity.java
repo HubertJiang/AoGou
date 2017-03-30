@@ -2,8 +2,6 @@ package com.kui.gou.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
@@ -29,8 +27,6 @@ import cn.bmob.v3.listener.UploadFileListener;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-import static android.Manifest.permission.CAMERA;
-
 /**
  * Created by Administrator on 2015/3/6.
  */
@@ -41,6 +37,8 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
     private String imagePath;
     private User user;
     private final int REQUEST_ADDRESS = 1, REQUEST_IMAGE = 2, REQUEST_NAME = 3;
+    private int index = -1;
+    private String[] genderArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +50,11 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         genderTextView.setText(user.getEmail());
         addressTextView.setText(user.getAddress());
         genderText.setText(user.getGender());
+        for (int i = 0; i < genderArray.length; i++) {
+            if (genderArray[i].equals(user.getGender())) {
+                index = i;
+            }
+        }
         if (user.getAvatar() != null)
             Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImageView);
         findViewById(R.id.address).setOnClickListener(this);
@@ -69,11 +72,12 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         genderText = (TextView) findViewById(R.id.gender_text);
         avatarImageView = (ImageView) findViewById(R.id.avatarImageView);
         user = BmobUser.getCurrentUser(User.class);
+        genderArray = getResources().getStringArray(R.array.gender);
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent;
+        final Intent intent;
         switch (v.getId()) {
             case R.id.address:
                 intent = new Intent(this, ModifyAddressActivity.class);
@@ -86,21 +90,21 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent, REQUEST_NAME);
                 break;
             case R.id.avatar:
-                if (mayRequestContacts()) {
-                    intent = new Intent(this, MultiImageSelectorActivity.class);
-                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
-                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, 0);
-                    startActivityForResult(intent, REQUEST_IMAGE);
-                }
+                intent = new Intent(this, MultiImageSelectorActivity.class);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, 0);
+                startActivityForResult(intent, REQUEST_IMAGE);
                 break;
             case R.id.gender:
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.gender);
-                builder.setSingleChoiceItems(R.array.gender, -1, new DialogInterface.OnClickListener() {
+                builder.setSingleChoiceItems(R.array.gender, index, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        modify(getResources().getStringArray(R.array.gender)[which]);
+                        index = which;
+                        modify(genderArray[which]);
                         dialog.dismiss();
                     }
                 });
@@ -206,18 +210,6 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-
-//        requestPermissions(new String[]{CAMERA}, REQUEST_READ_CONTACTS);
-
-        return false;
-    }
 
 //    /**
 //     * Callback received when a permissions request has been completed.

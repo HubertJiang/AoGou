@@ -30,5 +30,5 @@
         android:gravity="center"
         android:padding="@dimen/image_vertical_margin"
         android:text="@string/image_got_it"
-        android:textColor="@color/image_blue" />
+        android:textColor="@color/colorPrimary" />
 </LinearLayout>

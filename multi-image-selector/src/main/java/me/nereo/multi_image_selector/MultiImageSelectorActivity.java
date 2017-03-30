@@ -17,12 +17,6 @@ import java.util.ArrayList;
 
 import me.nereo.multi_image_selector.adapter.SelectImageAdapter;
 
-/**
- * Multi image selector
- * Created by Nereo on 2015/4/7.
- * Updated by nereo on 2016/1/19.
- * Updated by nereo on 2016/5/18.
- */
 public class MultiImageSelectorActivity extends AppCompatActivity
         implements MultiImageSelectorFragment.Callback {
 
@@ -59,19 +53,16 @@ public class MultiImageSelectorActivity extends AppCompatActivity
     private int mDefaultCount = DEFAULT_IMAGE_SIZE;
     private RecyclerView recyclerView;
     private SelectImageAdapter adapter;
-    public View viewBg;
+    public View viewBg,bottom;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setTheme(R.style.MIS_NO_ACTIONBAR);
         setContentView(R.layout.mis_activity_default);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         viewBg = findViewById(R.id.view);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().setStatusBarColor(Color.BLACK);
-//        }
+        bottom = findViewById(R.id.bottom);
 
         final Intent intent = getIntent();
         mDefaultCount = intent.getIntExtra(EXTRA_SELECT_COUNT, DEFAULT_IMAGE_SIZE);
@@ -90,7 +81,7 @@ public class MultiImageSelectorActivity extends AppCompatActivity
         mSubmitButton = (TextView) findViewById(R.id.commit);
         if (mode == MODE_MULTI) {
             updateDoneText(resultList);
-            mSubmitButton.setVisibility(View.VISIBLE);
+            bottom.setVisibility(View.VISIBLE);
             mSubmitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -106,7 +97,7 @@ public class MultiImageSelectorActivity extends AppCompatActivity
                 }
             });
         } else {
-            mSubmitButton.setVisibility(View.GONE);
+            bottom.setVisibility(View.GONE);
         }
 
         if (savedInstanceState == null) {
@@ -127,7 +118,6 @@ public class MultiImageSelectorActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
-//                finish();
                 super.onBackPressed();
                 return true;
         }
