@@ -3,8 +3,6 @@ package com.kui.gou.activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -15,6 +13,7 @@ import com.kui.gou.R;
 import com.kui.gou.adapter.ImageAdapter;
 import com.kui.gou.entity.Goods;
 import com.kui.gou.entity.User;
+import com.kui.gou.util.Constant;
 import com.kui.gou.view.CirclePageIndicator;
 import com.sobot.chat.SobotApi;
 import com.sobot.chat.api.model.ConsultingContent;
@@ -30,7 +29,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-public class GoodsDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class GoodsDetailActivity extends BaseActivity implements View.OnClickListener {
     private String id;
     private TextView content, likesTextView, serviceTextView;
     private ViewPager viewPager;
@@ -44,9 +43,6 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods_detail);
         id = getIntent().getStringExtra("id");
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         content = (TextView) findViewById(R.id.content);
         likesTextView = (TextView) findViewById(R.id.likes_text_view);
@@ -76,7 +72,6 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
             public void done(Goods object, BmobException e) {
                 goods = object;
                 swipeRefreshLayout.setRefreshing(false);
-//                swipeRefreshLayout.setEnabled(false);
                 if (e == null) {
                     getSupportActionBar().setTitle(object.name);
                     content.setText(object.content);
@@ -133,23 +128,23 @@ public class GoodsDetailActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.service_text_view:
                 Information info = new Information();
-                info.setAppkey("700bb6ffa0454fb3ba893bc49c55f383");
+                info.setAppkey(Constant.SERVICE_KEY);
                 info.setColor("#3F51B5");
-
+                info.setUname(BmobUser.getCurrentUser(User.class).getNickname());
+                info.setPhone(BmobUser.getCurrentUser(User.class).getMobilePhoneNumber());
+                info.setFace(BmobUser.getCurrentUser(User.class).getAvatar() == null ? null : BmobUser.getCurrentUser(User.class).getAvatar().getUrl());
                 //咨询内容
                 ConsultingContent consultingContent = new ConsultingContent();
-//咨询内容标题，必填
+                //咨询内容标题，必填
                 consultingContent.setSobotGoodsTitle(goods.name);
-//咨询内容图片，选填 但必须是图片地址
+                //咨询内容图片，选填 但必须是图片地址
                 consultingContent.setSobotGoodsImgUrl(goods.image.getFileUrl());
-//描述，选填
+                //描述，选填
                 consultingContent.setSobotGoodsDescribe(goods.content);
-//标签，选填
-                consultingContent.setSobotGoodsLable(goods.price+"");
-//可以设置为null
+                //标签，选填
+                consultingContent.setSobotGoodsLable(goods.price + "");
+                consultingContent.setSobotGoodsFromUrl(goods.getObjectId());
                 info.setConsultingContent(consultingContent);
-
-
                 SobotApi.startSobotChat(this, info);
                 break;
         }

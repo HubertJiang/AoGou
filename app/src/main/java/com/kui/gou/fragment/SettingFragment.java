@@ -16,7 +16,9 @@ import com.kui.gou.activity.InformationActivity;
 import com.kui.gou.activity.LikesActivity;
 import com.kui.gou.activity.SignInActivity;
 import com.kui.gou.entity.User;
+import com.kui.gou.util.Constant;
 import com.sobot.chat.SobotApi;
+import com.sobot.chat.api.model.Information;
 
 import cn.bmob.v3.BmobUser;
 
@@ -55,6 +57,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                     startActivity(new Intent(getActivity(), LikesActivity.class));
                     break;
                 case R.id.message:
+                    Information info = new Information();
+                    info.setAppkey(Constant.SERVICE_KEY);
+                    info.setColor("#3F51B5");
+                    info.setUname(user.getNickname());
+                    info.setPhone(user.getMobilePhoneNumber());
+                    info.setFace(user.getAvatar() == null ? null : user.getAvatar().getUrl());
+                    SobotApi.startSobotChat(getActivity(), info);
                     break;
                 case R.id.user:
                     startActivity(new Intent(getActivity(), InformationActivity.class));
