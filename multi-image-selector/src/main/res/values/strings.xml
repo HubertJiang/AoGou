@@ -16,6 +16,9 @@
     <string name="mis_permission_dialog_cancel">拒绝</string>
     <string name="mis_permission_rationale">浏览图片需要您提供浏览存储的权限</string>
     <string name="mis_permission_rationale_write_storage">保存拍照图片需要您提供写存储权限</string>
-    <string name="most_hint">您最多只能选择%1$s张照片</string>
+    <string name="most_hint">您最多只能选择%1$d张照片</string>
     <string name="image_got_it">我知道了</string>
+    <string name="permission">权限申请</string>
+    <string name="go_set">去设置</string>
+    <string name="permission_sd_hint">在设置-应用-澳购-权限中开启相机权限，以正常使用拍照功能</string>
 </resources>

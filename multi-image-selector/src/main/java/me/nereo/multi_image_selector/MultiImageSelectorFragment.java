@@ -1,8 +1,11 @@
 package me.nereo.multi_image_selector;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -12,13 +15,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -57,7 +64,6 @@ public class MultiImageSelectorFragment extends Fragment {
 
     public static final String TAG = "MultiImageSelectorFragment";
 
-    private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 110;
     private static final int REQUEST_CAMERA = 100;
 
     private static final String KEY_TEMP_FILE = "key_temp_file";
@@ -204,7 +210,7 @@ public class MultiImageSelectorFragment extends Fragment {
                     mFolderPopupWindow.dismiss();
                 } else {
                     mFolderPopupWindow.show();
-                    ((MultiImageSelectorActivity)getActivity()).viewBg.setVisibility(View.VISIBLE);
+                    ((MultiImageSelectorActivity) getActivity()).viewBg.setVisibility(View.VISIBLE);
                     mCategoryText.setSelected(true);
                     int index = mFolderAdapter.getSelectIndex();
                     index = index == 0 ? index : index - 1;
@@ -314,7 +320,7 @@ public class MultiImageSelectorFragment extends Fragment {
             @Override
             public void onDismiss() {
                 mCategoryText.setSelected(false);
-                ((MultiImageSelectorActivity)getActivity()).viewBg.setVisibility(View.GONE);
+                ((MultiImageSelectorActivity) getActivity()).viewBg.setVisibility(View.GONE);
             }
         });
     }
@@ -386,29 +392,28 @@ public class MultiImageSelectorFragment extends Fragment {
      * Open camera
      */
     public void showCameraAction() {
-//        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                    getString(R.string.mis_permission_rationale_write_storage),
-//                    REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
-//        } else {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            try {
-                mTmpFile = FileUtils.createTmpFile(getActivity());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (mTmpFile != null && mTmpFile.exists()) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
-                startActivityForResult(intent, REQUEST_CAMERA);
-            } else {
-                Toast.makeText(getActivity(), R.string.mis_error_image_not_exist, Toast.LENGTH_SHORT).show();
-            }
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    1);
         } else {
-            Toast.makeText(getActivity(), R.string.mis_msg_no_camera, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                try {
+                    mTmpFile = FileUtils.createTmpFile(getActivity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (mTmpFile != null && mTmpFile.exists()) {
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
+                    startActivityForResult(intent, REQUEST_CAMERA);
+                } else {
+                    Toast.makeText(getActivity(), R.string.mis_error_image_not_exist, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), R.string.mis_msg_no_camera, Toast.LENGTH_SHORT).show();
+            }
         }
-//        }
     }
 
 //    private void requestPermission(final String permission, String rationale, final int requestCode) {
@@ -429,16 +434,35 @@ public class MultiImageSelectorFragment extends Fragment {
 //        }
 //    }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (requestCode == REQUEST_STORAGE_WRITE_ACCESS_PERMISSION) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                showCameraAction();
-//            }
-//        } else {
-//            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        }
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showCameraAction();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.permission);
+                builder.setMessage(R.string.permission_sd_hint);
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setPositiveButton(R.string.go_set, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:com.kuiyuan.aogou")));
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     /**
      * notify callback

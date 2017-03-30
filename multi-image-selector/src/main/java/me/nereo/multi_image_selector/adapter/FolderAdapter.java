@@ -86,12 +86,6 @@ public class FolderAdapter extends BaseAdapter {
                     Folder f = mFolders.get(0);
                     if (f != null) {
                         Glide.with(mContext).load(f.cover.path).into(holder.cover);
-//                        Picasso.with(mContext)
-//                                .load(new File(f.cover.path))
-//                                .error(R.drawable.mis_default_error)
-//                                .resizeDimen(R.dimen.mis_folder_cover_size, R.dimen.mis_folder_cover_size)
-//                                .centerCrop()
-//                                .into(holder.cover);
                     }else{
                         holder.cover.setImageResource(R.drawable.mis_default_error);
                     }
@@ -158,12 +152,6 @@ public class FolderAdapter extends BaseAdapter {
             if (data.cover != null) {
                 // 显示图片
                 Glide.with(mContext).load(data.cover.path).into(cover);
-//                Picasso.with(mContext)
-//                        .load(new File(data.cover.path))
-//                        .placeholder(R.drawable.mis_default_error)
-//                        .resizeDimen(R.dimen.mis_folder_cover_size, R.dimen.mis_folder_cover_size)
-//                        .centerCrop()
-//                        .into(cover);
             }else{
                 cover.setImageResource(R.drawable.mis_default_error);
             }

@@ -270,13 +270,6 @@ public class ImageGridAdapter extends BaseAdapter {
             if (imageFile.exists()) {
                 // 显示图片
                 Glide.with(mContext).load(imageFile).into(image);
-//                Picasso.with(mContext)
-//                        .load(imageFile)
-//                        .placeholder(R.drawable.mis_default_error)
-//                        .tag(MultiImageSelectorFragment.TAG)
-//                        .resize(mGridWidth, mGridWidth)
-//                        .centerCrop()
-//                        .into(image);
             } else {
                 image.setImageResource(R.drawable.mis_default_error);
             }
