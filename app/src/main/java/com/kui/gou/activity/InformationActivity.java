@@ -39,6 +39,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
     private final int REQUEST_ADDRESS = 1, REQUEST_IMAGE = 2, REQUEST_NAME = 3;
     private int index = -1;
     private String[] genderArray;
+    private ArrayList<BmobFile> images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +56,16 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                 index = i;
             }
         }
-        if (user.getAvatar() != null)
+        if (user.getAvatar() != null) {
+            images = new ArrayList<>();
+            images.add(user.getAvatar());
             Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImageView);
+        }
         findViewById(R.id.address).setOnClickListener(this);
         findViewById(R.id.avatar).setOnClickListener(this);
         findViewById(R.id.nickname).setOnClickListener(this);
         findViewById(R.id.gender).setOnClickListener(this);
+        avatarImageView.setOnClickListener(this);
         findViewById(R.id.exit).setOnClickListener(this);
     }
 
@@ -88,6 +93,13 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                 intent = new Intent(this, ModifyNicknameActivity.class);
                 intent.putExtra("nickname", user.getNickname());
                 startActivityForResult(intent, REQUEST_NAME);
+                break;
+            case R.id.avatarImageView:
+                if (images != null) {
+                    intent = new Intent(this, ImageViewActivity.class);
+                    intent.putExtra("images", images);
+                    startActivity(intent);
+                }
                 break;
             case R.id.avatar:
                 intent = new Intent(this, MultiImageSelectorActivity.class);
