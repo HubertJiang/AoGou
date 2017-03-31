@@ -3,7 +3,6 @@ package com.kui.gou.activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -51,19 +50,14 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1, R.color.refresh_progress_2, R.color.refresh_progress_3);
+//        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1, R.color.refresh_progress_2, R.color.refresh_progress_3);
 
         adapter = new ImageAdapter();
         likesTextView.setOnClickListener(this);
         serviceTextView.setOnClickListener(this);
-        swipeRefreshLayout.setRefreshing(true);
-        swipeRefreshLayout.setEnabled(false);
-        swipeRefreshLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+//        swipeRefreshLayout.setRefreshing(true);
+//        swipeRefreshLayout.setEnabled(false);
+
 
 
         BmobQuery<Goods> query = new BmobQuery<>();
@@ -72,7 +66,7 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void done(Goods object, BmobException e) {
                 goods = object;
-                swipeRefreshLayout.setRefreshing(false);
+//                swipeRefreshLayout.setRefreshing(false);
                 if (e == null) {
                     getSupportActionBar().setTitle(object.name);
                     content.setText(object.content);
@@ -117,7 +111,7 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
                        likesTextView.setText(R.string.favorite);
                    }
                 } else {
-                    AoApplication.showToast(e.toString());
+                    AoApplication.showToast(R.string.no_network);
                 }
             }
 
@@ -129,7 +123,7 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.likes_text_view:
                 likesTextView.setEnabled(false);
-                swipeRefreshLayout.setRefreshing(true);
+//                swipeRefreshLayout.setRefreshing(true);
                 BmobRelation relation = new BmobRelation();
                 if(likesTextView.getText().equals(getString(R.string.favorite))){
                     relation.add(goods);
@@ -141,7 +135,7 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
                 newUser.update(BmobUser.getCurrentUser().getObjectId(), new UpdateListener() {
                     @Override
                     public void done(BmobException e) {
-                        swipeRefreshLayout.setRefreshing(false);
+//                        swipeRefreshLayout.setRefreshing(false);
                         likesTextView.setEnabled(true);
                         if (e == null) {
                             if(likesTextView.getText().equals(getString(R.string.favorite))){

@@ -89,7 +89,7 @@ public class LikesActivity extends BaseActivity {
                     adapter.setLoaded();
                     page++;
                 } else {
-                    AoApplication.showToast(e.toString());
+                    AoApplication.showToast(R.string.no_network);
                 }
             }
         });
