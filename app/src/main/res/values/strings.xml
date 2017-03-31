@@ -45,6 +45,7 @@
     <string name="exit">退出登录</string>
     <string name="message">消息</string>
     <string name="favorite">收藏</string>
+    <string name="already_favorite">已收藏</string>
     <string name="service">客服</string>
 
     <string name="ao">澳洲</string>

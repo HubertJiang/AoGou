@@ -3,8 +3,6 @@ package com.kui.gou.activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -20,12 +18,15 @@ import com.sobot.chat.api.model.ConsultingContent;
 import com.sobot.chat.api.model.Information;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 
@@ -51,19 +52,19 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
         circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1, R.color.refresh_progress_2, R.color.refresh_progress_3);
-        swipeRefreshLayout.setProgressViewOffset(true, 0, 500);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
 
         adapter = new ImageAdapter();
         likesTextView.setOnClickListener(this);
         serviceTextView.setOnClickListener(this);
         swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
             }
         });
+
 
         BmobQuery<Goods> query = new BmobQuery<>();
         query.getObject(id, new QueryListener<Goods>() {
@@ -89,8 +90,34 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
                     adapter.setImages(images);
                     viewPager.setAdapter(adapter);
                     circlePageIndicator.setViewPager(viewPager);
+
                 } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                    AoApplication.showToast(R.string.no_network);
+                }
+            }
+
+        });
+        get();
+    }
+
+    private void get() {
+        BmobQuery<Goods> query = new BmobQuery<>();
+        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
+        List<BmobQuery<Goods>> queries = new ArrayList<>();
+        queries.add(new BmobQuery<Goods>().addWhereEqualTo("objectId", id));
+        queries.add(new BmobQuery<Goods>().addWhereRelatedTo("likes", new BmobPointer(BmobUser.getCurrentUser())));
+        query.and(queries);
+        query.findObjects(new FindListener<Goods>() {
+            @Override
+            public void done(List<Goods> list, BmobException e) {
+                if (e == null) {
+                   if(list.size()>0){
+                       likesTextView.setText(R.string.already_favorite);
+                   }else {
+                       likesTextView.setText(R.string.favorite);
+                   }
+                } else {
+                    AoApplication.showToast(e.toString());
                 }
             }
 
@@ -98,30 +125,32 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.likes_text_view:
+                likesTextView.setEnabled(false);
+                swipeRefreshLayout.setRefreshing(true);
                 BmobRelation relation = new BmobRelation();
-                relation.add(goods);
+                if(likesTextView.getText().equals(getString(R.string.favorite))){
+                    relation.add(goods);
+                }else {
+                    relation.remove(goods);
+                }
                 User newUser = new User();
                 newUser.setLikes(relation);
                 newUser.update(BmobUser.getCurrentUser().getObjectId(), new UpdateListener() {
                     @Override
                     public void done(BmobException e) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        likesTextView.setEnabled(true);
                         if (e == null) {
-                            Log.i("bmob", "多对多关联添加成功");
+                            if(likesTextView.getText().equals(getString(R.string.favorite))){
+                                likesTextView.setText(R.string.already_favorite);
+                            }else {
+                                likesTextView.setText(R.string.favorite);
+                            }
                         } else {
-                            Log.i("bmob", "失败：" + e.getMessage());
+                            AoApplication.showToast(R.string.no_network);
                         }
                     }
                 });
