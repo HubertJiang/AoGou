@@ -28,6 +28,7 @@
     <!--sign up-->
     <string name="prompt_code">验证码</string>
     <string name="sign_up_success">注册成功，请登录</string>
+    <string name="user_exist">用户名已存在，请直接登录</string>
     <string name="sign_up_error">该用户已注册，请直接登录</string>
     <string name="prompt_password">请输入6-16位密码</string>
     <string name="prompt_nickname">请输入昵称</string>
