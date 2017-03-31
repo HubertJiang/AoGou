@@ -10,4 +10,5 @@
     <dimen name="detail_title">16sp</dimen>
     <dimen name="one">1dp</dimen>
     <dimen name="eight">8dp</dimen>
+    <dimen name="button">18dp</dimen>
 </resources>

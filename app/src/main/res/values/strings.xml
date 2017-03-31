@@ -30,6 +30,7 @@
     <string name="sign_up_success">注册成功，请登录</string>
     <string name="sign_up_error">该用户已注册，请直接登录</string>
     <string name="prompt_password">请输入6-16位密码</string>
+    <string name="prompt_nickname">请输入昵称</string>
     <string name="prompt_re_password">请确认密码</string>
     <string name="reset_password">设置新密码</string>
     <string name="prompt_password_not">两次输入密码不一致</string>

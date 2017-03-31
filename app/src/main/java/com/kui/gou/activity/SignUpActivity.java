@@ -3,11 +3,7 @@ package com.kui.gou.activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -27,9 +23,9 @@ import cn.smssdk.SMSSDK;
 
 public class SignUpActivity extends BaseActivity implements View.OnClickListener {
 
-    private EditText numberText, codeText, passwordText;
+    private EditText numberText, codeText, passwordText, nicknameText;
     private TextView getCode;
-    private String phone, code, password;
+    private String phone, code, password, nickname;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -40,21 +36,10 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         numberText = (EditText) findViewById(R.id.number);
         codeText = (EditText) findViewById(R.id.code);
         passwordText = (EditText) findViewById(R.id.password);
+        nicknameText = (EditText) findViewById(R.id.nickname);
 
         getCode = (TextView) findViewById(R.id.get_code_text);
         getCode.setOnClickListener(this);
-        passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-//                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.sign_in_button);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1, R.color.refresh_progress_2, R.color.refresh_progress_3);
@@ -76,6 +61,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                                 User user = new User();
                                 user.setUsername(phone);
                                 user.setPassword(password);
+                                user.setNickname(nickname);
+                                user.setMobilePhoneNumberVerified(true);
+                                user.setMobilePhoneNumber(phone);
                                 user.signUp(new SaveListener<User>() {
                                     @Override
                                     public void done(User user, BmobException e) {
@@ -153,17 +141,23 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         // Reset errors.
         numberText.setError(null);
         codeText.setError(null);
+        nicknameText.setError(null);
         passwordText.setError(null);
 
         // Store values at the time of the login attempt.
         phone = numberText.getText().toString();
         code = codeText.getText().toString();
         password = passwordText.getText().toString();
+        nickname = nicknameText.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
         // Check for a valid email address.
-        if (TextUtils.isEmpty(phone)) {
+        if (TextUtils.isEmpty(nickname)) {
+            nicknameText.setError(getString(R.string.prompt_nickname));
+            focusView = nicknameText;
+            cancel = true;
+        } else if (TextUtils.isEmpty(phone)) {
             numberText.setError(getString(R.string.error_field_required));
             focusView = numberText;
             cancel = true;
@@ -186,14 +180,6 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 }
 
