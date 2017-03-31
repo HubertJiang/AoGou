@@ -53,7 +53,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
+
                         if (result == SMSSDK.RESULT_COMPLETE) {
                             //回调完成
                             if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
@@ -78,12 +78,15 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                                 });
                             } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                                 //获取验证码成功
+                                swipeRefreshLayout.setRefreshing(false);
                                 AoApplication.showToast(R.string.code_send);
                             } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+                                swipeRefreshLayout.setRefreshing(false);
+
                                 //返回支持发送验证码的国家列表
                             }
                         } else {
-
+                            swipeRefreshLayout.setRefreshing(false);
                             try {
                                 Throwable throwable = (Throwable) data;
                                 throwable.printStackTrace();
