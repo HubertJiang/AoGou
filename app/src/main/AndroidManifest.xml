@@ -27,6 +27,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.kui.gou.activity.WelcomeActivity"
+            android:theme="@style/WelcomeTheme"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
