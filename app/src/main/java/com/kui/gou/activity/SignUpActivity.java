@@ -72,7 +72,15 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                                             AoApplication.showToast(R.string.sign_up_success);
                                             finish();
                                         } else {
-                                            AoApplication.showToast(e.toString());
+                                            switch (e.getErrorCode()){
+                                                case 202:
+                                                    AoApplication.showToast(R.string.user_exist);
+                                                    break;
+                                                default:
+                                                    AoApplication.showToast(e.toString());
+                                                    break;
+                                            }
+
                                         }
                                     }
                                 });
@@ -82,7 +90,6 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                                 AoApplication.showToast(R.string.code_send);
                             } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
                                 swipeRefreshLayout.setRefreshing(false);
-
                                 //返回支持发送验证码的国家列表
                             }
                         } else {
@@ -104,7 +111,6 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                             } catch (JSONException e) {
                                 CrashReport.postCatchedException(e);
                             }
-
                         }
                     }
                 });
@@ -135,11 +141,6 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     }
 
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
         // Reset errors.
         numberText.setError(null);

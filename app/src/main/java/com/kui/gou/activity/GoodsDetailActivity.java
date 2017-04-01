@@ -1,5 +1,6 @@
 package com.kui.gou.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -37,6 +38,7 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
     private SwipeRefreshLayout swipeRefreshLayout;
     private Goods goods;
     private ImageAdapter adapter;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,7 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
         likesTextView.setOnClickListener(this);
         serviceTextView.setOnClickListener(this);
         swipeRefreshLayout.setRefreshing(true);
-//        swipeRefreshLayout.setEnabled(false);
-
-
+        swipeRefreshLayout.setEnabled(false);
 
         BmobQuery<Goods> query = new BmobQuery<>();
         query.getObject(id, new QueryListener<Goods>() {
@@ -91,7 +91,7 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
             }
 
         });
-        get();
+
     }
 
     private void get() {
@@ -99,17 +99,17 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
         query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
         List<BmobQuery<Goods>> queries = new ArrayList<>();
         queries.add(new BmobQuery<Goods>().addWhereEqualTo("objectId", id));
-        queries.add(new BmobQuery<Goods>().addWhereRelatedTo("likes", new BmobPointer(BmobUser.getCurrentUser())));
+        queries.add(new BmobQuery<Goods>().addWhereRelatedTo("likes", new BmobPointer(user)));
         query.and(queries);
         query.findObjects(new FindListener<Goods>() {
             @Override
             public void done(List<Goods> list, BmobException e) {
                 if (e == null) {
-                   if(list.size()>0){
-                       likesTextView.setText(R.string.already_favorite);
-                   }else {
-                       likesTextView.setText(R.string.favorite);
-                   }
+                    if (list.size() > 0) {
+                        likesTextView.setText(R.string.already_favorite);
+                    } else {
+                        likesTextView.setText(R.string.favorite);
+                    }
                 } else {
                     AoApplication.showToast(R.string.no_network);
                 }
@@ -122,54 +122,71 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.likes_text_view:
-                likesTextView.setEnabled(false);
-                swipeRefreshLayout.setRefreshing(true);
-                BmobRelation relation = new BmobRelation();
-                if(likesTextView.getText().equals(getString(R.string.favorite))){
-                    relation.add(goods);
-                }else {
-                    relation.remove(goods);
-                }
-                User newUser = new User();
-                newUser.setLikes(relation);
-                newUser.update(BmobUser.getCurrentUser().getObjectId(), new UpdateListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        likesTextView.setEnabled(true);
-                        if (e == null) {
-                            if(likesTextView.getText().equals(getString(R.string.favorite))){
-                                likesTextView.setText(R.string.already_favorite);
-                            }else {
-                                likesTextView.setText(R.string.favorite);
-                            }
-                        } else {
-                            AoApplication.showToast(R.string.no_network);
-                        }
+                if (user == null) {
+                    startActivity(new Intent(this, SignInActivity.class));
+                } else {
+                    likesTextView.setEnabled(false);
+                    swipeRefreshLayout.setRefreshing(true);
+                    BmobRelation relation = new BmobRelation();
+                    if (likesTextView.getText().equals(getString(R.string.favorite))) {
+                        relation.add(goods);
+                    } else {
+                        relation.remove(goods);
                     }
-                });
+                    User newUser = new User();
+                    newUser.setLikes(relation);
+                    newUser.update(BmobUser.getCurrentUser().getObjectId(), new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            swipeRefreshLayout.setRefreshing(false);
+                            likesTextView.setEnabled(true);
+                            if (e == null) {
+                                if (likesTextView.getText().equals(getString(R.string.favorite))) {
+                                    likesTextView.setText(R.string.already_favorite);
+                                } else {
+                                    likesTextView.setText(R.string.favorite);
+                                }
+                            } else {
+                                AoApplication.showToast(R.string.no_network);
+                            }
+                        }
+                    });
+                }
                 break;
             case R.id.service_text_view:
-                Information info = new Information();
-                info.setAppkey(Constant.SERVICE_KEY);
-                info.setColor("#3F51B5");
-                info.setUname(BmobUser.getCurrentUser(User.class).getNickname());
-                info.setPhone(BmobUser.getCurrentUser(User.class).getMobilePhoneNumber());
-                info.setFace(BmobUser.getCurrentUser(User.class).getAvatar() == null ? null : BmobUser.getCurrentUser(User.class).getAvatar().getUrl());
-                //咨询内容
-                ConsultingContent consultingContent = new ConsultingContent();
-                //咨询内容标题，必填
-                consultingContent.setSobotGoodsTitle(goods.name);
-                //咨询内容图片，选填 但必须是图片地址
-                consultingContent.setSobotGoodsImgUrl(goods.image.getFileUrl());
-                //描述，选填
-                consultingContent.setSobotGoodsDescribe(goods.content);
-                //标签，选填
-                consultingContent.setSobotGoodsLable(goods.price + "");
-                consultingContent.setSobotGoodsFromUrl(goods.getObjectId());
-                info.setConsultingContent(consultingContent);
-                SobotApi.startSobotChat(this, info);
-                break;
+                if (user == null) {
+                    startActivity(new Intent(this, SignInActivity.class));
+                } else {
+                    Information info = new Information();
+                    info.setAppkey(Constant.SERVICE_KEY);
+                    info.setColor("#3F51B5");
+                    info.setUname(BmobUser.getCurrentUser(User.class).getNickname());
+                    info.setPhone(BmobUser.getCurrentUser(User.class).getMobilePhoneNumber());
+                    info.setFace(BmobUser.getCurrentUser(User.class).getAvatar() == null ? null : BmobUser.getCurrentUser(User.class).getAvatar().getUrl());
+                    //咨询内容
+                    ConsultingContent consultingContent = new ConsultingContent();
+                    //咨询内容标题，必填
+                    consultingContent.setSobotGoodsTitle(goods.name);
+                    //咨询内容图片，选填 但必须是图片地址
+                    consultingContent.setSobotGoodsImgUrl(goods.image.getFileUrl());
+                    //描述，选填
+                    consultingContent.setSobotGoodsDescribe(goods.content);
+                    //标签，选填
+                    consultingContent.setSobotGoodsLable(goods.price + "");
+                    consultingContent.setSobotGoodsFromUrl(goods.getObjectId());
+                    info.setConsultingContent(consultingContent);
+                    SobotApi.startSobotChat(this, info);
+                    break;
+                }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        user = BmobUser.getCurrentUser(User.class);
+        if (user != null) {
+            get();
         }
     }
 }
