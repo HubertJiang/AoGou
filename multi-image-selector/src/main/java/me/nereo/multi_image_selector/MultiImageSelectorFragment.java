@@ -442,7 +442,7 @@ public class MultiImageSelectorFragment extends Fragment {
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.permission);
-                builder.setMessage(R.string.permission_sd_hint);
+                builder.setMessage(R.string.permission_camera_hint);
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

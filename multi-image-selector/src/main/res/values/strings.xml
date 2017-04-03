@@ -20,5 +20,5 @@
     <string name="image_got_it">我知道了</string>
     <string name="permission">权限申请</string>
     <string name="go_set">去设置</string>
-    <string name="permission_sd_hint">在设置-应用-澳购-权限中开启相机权限，以正常使用拍照功能</string>
+    <string name="permission_camera_hint">在设置-应用-澳购-权限中开启相机权限，以正常使用拍照功能</string>
 </resources>

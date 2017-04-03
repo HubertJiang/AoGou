@@ -9,6 +9,7 @@
     <string name="permission">权限申请</string>
     <string name="go_set">去设置</string>
     <string name="permission_sd_hint">在设置-应用-澳购-权限中开启存储空间权限，以正常使用澳购功能</string>
+    <string name="permission_phone_hint">在设置-应用-澳购-权限中开启电话权限，以正常使用澳购功能</string>
     <!-- Strings related to login -->
     <string name="prompt_email">手机号码</string>
     <string name="password">密码</string>
