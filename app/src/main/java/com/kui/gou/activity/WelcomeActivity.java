@@ -35,7 +35,6 @@ public class WelcomeActivity extends AppCompatActivity {
                             Manifest.permission.READ_PHONE_STATE},
                     1);
         } else {
-
             startAd();
         }
     }
