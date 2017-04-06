@@ -10,7 +10,8 @@
     <string name="go_set">去设置</string>
     <string name="permission_sd_hint">在设置-应用-澳购-权限中开启存储空间权限，以正常使用澳购功能</string>
     <string name="permission_phone_hint">在设置-应用-澳购-权限中开启电话权限，以正常使用澳购功能</string>
-    <!-- Strings related to login -->
+
+    <!-- sign in -->
     <string name="prompt_email">手机号码</string>
     <string name="password">密码</string>
     <string name="action_sign_in">登录</string>
@@ -26,14 +27,17 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">请输入手机号码</string>
+
     <!--sign up-->
     <string name="prompt_code">验证码</string>
     <string name="sign_up_success">注册成功，请登录</string>
     <string name="user_exist">用户名已存在，请直接登录</string>
     <string name="sign_up_error">该用户已注册，请直接登录</string>
     <string name="prompt_password">请输入6-16位密码</string>
+    <string name="prompt_new_password">请输入6-16位新密码</string>
+    <string name="prompt_now_password">请输入当前密码</string>
     <string name="prompt_nickname">请输入昵称</string>
-    <string name="prompt_re_password">请确认密码</string>
+    <string name="prompt_re_password">请确认新密码</string>
     <string name="reset_password">设置新密码</string>
     <string name="prompt_password_not">两次输入密码不一致</string>
     <string name="code_error">验证码错误，请重新输入</string>
@@ -41,6 +45,7 @@
     <string name="can_resend_code">秒后重发</string>
     <string name="next_step">下一步</string>
     <string name="sure">确认</string>
+
     <!--setting-->
     <string name="mine">我的</string>
     <string name="setting">设置</string>
@@ -50,7 +55,6 @@
     <string name="favorite">收藏</string>
     <string name="already_favorite">已收藏</string>
     <string name="service">客服</string>
-
     <string name="ao">澳洲</string>
 
     <!--find-->
@@ -70,5 +74,8 @@
     <string name="signature">个人简介</string>
     <string name="information">个人信息</string>
     <string name="save">保存</string>
+    <string name="modify_nickname">更改昵称</string>
+    <string name="modify_address">更改地址</string>
+    <string name="modify_password">更改密码</string>
 
 </resources>

@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/get_password"
                 android:textColor="@color/colorAccent"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
