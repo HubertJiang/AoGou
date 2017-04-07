@@ -120,6 +120,16 @@
         </TableRow>
 
         <TextView
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@color/image_white"
+            android:padding="@dimen/activity_vertical_margin"
+            android:text="@string/modify_password"
+            android:textColor="@color/primary_text" />
+
+        <TextView
             android:id="@+id/exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -67,6 +67,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.gender).setOnClickListener(this);
         avatarImageView.setOnClickListener(this);
         findViewById(R.id.exit).setOnClickListener(this);
+        findViewById(R.id.password).setOnClickListener(this);
     }
 
     private void initialize() {
@@ -121,6 +122,9 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                     }
                 });
                 builder.show();
+                break;
+            case R.id.password:
+              startActivity(new Intent(this,ModifyPasswordActivity.class));
                 break;
             case R.id.exit:
                 BmobUser.logOut();
@@ -223,28 +227,4 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-//    /**
-//     * Callback received when a permissions request has been completed.
-//     */
-//    @TargetApi(Build.VERSION_CODES.M)
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        if (requestCode == REQUEST_READ_CONTACTS && grantResults.length == 1) {
-//            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-//                if (!shouldShowRequestPermissionRationale(CAMERA)) {
-//                    Intent intent = new Intent();
-//                    intent.setAction("android.intent.action.MAIN");
-//                    intent.setClassName("com.android.settings", "com.android.settings.ManageApplications");
-//                    startActivity(intent);
-//                }
-//            } else {
-//                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-//                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-//                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 2);
-//                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, 0);
-//                startActivityForResult(intent, REQUEST_IMAGE);
-//            }
-//        }
-//    }
 }

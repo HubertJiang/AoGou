@@ -75,6 +75,9 @@
             android:name="com.kui.gou.activity.WebActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.kui.gou.activity.ModifyPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.kui.gou.activity.ImageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />

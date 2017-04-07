@@ -37,14 +37,18 @@ public class ModifyPasswordActivity extends BaseActivity implements TextWatcher 
     }
 
     private void modify() {
-        BmobUser.updateCurrentUserPassword("旧密码", "新密码", new UpdateListener() {
+        BmobUser.updateCurrentUserPassword(pass, newPass, new UpdateListener() {
 
             @Override
             public void done(BmobException e) {
+                saveItem.setEnabled(true);
                 if (e == null) {
-//                    toast("密码修改成功，可以用新密码进行登录啦");
+                    AoApplication.showToast(R.string.password_success);
+                    finish();
+                } else if (e.getErrorCode() == 210) {
+                    AoApplication.showToast(R.string.password_error);
                 } else {
-//                    toast("失败:" + e.getMessage());
+                    AoApplication.showToast(R.string.no_network);
                 }
             }
 
@@ -66,10 +70,14 @@ public class ModifyPasswordActivity extends BaseActivity implements TextWatcher 
                 pass = editText.getText().toString();
                 newPass = newEditText.getText().toString();
                 rePass = reEditText.getText().toString();
-
-                saveItem.setEnabled(false);
-                modify();
-
+                if (!newPass.equals(rePass)) {
+                    AoApplication.showToast(R.string.password_not_same);
+                } else if (newPass.length() < 6) {
+                    AoApplication.showToast(R.string.password_short);
+                } else {
+                    saveItem.setEnabled(false);
+                    modify();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -90,9 +98,9 @@ public class ModifyPasswordActivity extends BaseActivity implements TextWatcher 
         pass = editText.getText().toString();
         newPass = newEditText.getText().toString();
         rePass = reEditText.getText().toString();
-        if(TextUtils.isEmpty(pass)||TextUtils.isEmpty(newPass)||TextUtils.isEmpty(rePass)){
+        if (TextUtils.isEmpty(pass) || TextUtils.isEmpty(newPass) || TextUtils.isEmpty(rePass)) {
             saveItem.setEnabled(false);
-        }else {
+        } else {
             saveItem.setEnabled(true);
         }
     }
