@@ -137,7 +137,7 @@ public class MainActivity extends BaseActivity {
 
     private void get() {
         BmobQuery<Classify> query = new BmobQuery<>();
-        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.findObjects(new FindListener<Classify>() {
             @Override
             public void done(List<Classify> list, BmobException e) {
@@ -146,6 +146,7 @@ public class MainActivity extends BaseActivity {
                     classify.name = getString(R.string.all);
                     list.add(0, classify);
                     adapter.setObjects(list);
+                    spinner.setSelection(0);
                 } else {
                     AoApplication.showToast(R.string.no_network);
                 }
