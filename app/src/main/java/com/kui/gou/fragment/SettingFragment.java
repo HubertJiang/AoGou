@@ -9,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.kui.gou.R;
-import com.kui.gou.activity.AoApplication;
 import com.kui.gou.activity.InformationActivity;
 import com.kui.gou.activity.LikesActivity;
 import com.kui.gou.activity.SignInActivity;
@@ -20,7 +18,6 @@ import com.kui.gou.util.Constant;
 import com.sobot.chat.SobotApi;
 import com.sobot.chat.api.model.Information;
 
-import cn.bmob.v3.BmobUser;
 
 
 public class SettingFragment extends Fragment implements View.OnClickListener {
@@ -61,8 +58,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                     info.setAppkey(Constant.SERVICE_KEY);
                     info.setColor("#3F51B5");
                     info.setUname(user.getNickname());
-                    info.setPhone(user.getMobilePhoneNumber());
-                    info.setFace(user.getAvatar() == null ? null : user.getAvatar().getUrl());
+//                    info.setPhone(user.getMobilePhoneNumber());
+//                    info.setFace(user.getAvatar() == null ? null : user.getAvatar().getUrl());
                     SobotApi.startSobotChat(getActivity(), info);
                     break;
                 case R.id.user:
@@ -76,15 +73,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        user = BmobUser.getCurrentUser(User.class);
-        if (user == null) {
-            avatarImage.setImageResource(R.mipmap.ic_avatar);
-            nicknameText.setText(R.string.sign_in_hint);
-        } else {
-            nicknameText.setText(user.getNickname());
-            if (user.getAvatar() != null) {
-                Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImage);
-            }
-        }
+//        user = BmobUser.getCurrentUser(User.class);
+//        if (user == null) {
+//            avatarImage.setImageResource(R.mipmap.ic_avatar);
+//            nicknameText.setText(R.string.sign_in_hint);
+//        } else {
+//            nicknameText.setText(user.getNickname());
+//            if (user.getAvatar() != null) {
+//                Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImage);
+//            }
+//        }
     }
 }

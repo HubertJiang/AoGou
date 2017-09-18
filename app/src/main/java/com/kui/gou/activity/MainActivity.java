@@ -13,7 +13,6 @@ import android.widget.Spinner;
 
 import com.kui.gou.R;
 import com.kui.gou.adapter.ClassifyAdapter;
-import com.kui.gou.entity.Classify;
 import com.kui.gou.fragment.FindFragment;
 import com.kui.gou.fragment.MainFragment;
 import com.kui.gou.fragment.SettingFragment;
@@ -21,10 +20,6 @@ import com.kui.gou.util.BottomNavigationViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 public class MainActivity extends BaseActivity {
     private int currentItem = R.id.goods;
@@ -101,7 +96,7 @@ public class MainActivity extends BaseActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mainFragment.refresh(adapter.getItem(position).getObjectId());
+//                mainFragment.refresh(adapter.getItem(position).getObjectId());
             }
 
             @Override
@@ -131,28 +126,28 @@ public class MainActivity extends BaseActivity {
         spinner.setVisibility(View.VISIBLE);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        get();
+//        get();
     }
 
 
-    private void get() {
-        BmobQuery<Classify> query = new BmobQuery<>();
-        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.findObjects(new FindListener<Classify>() {
-            @Override
-            public void done(List<Classify> list, BmobException e) {
-                if (e == null) {
-                    Classify classify = new Classify();
-                    classify.name = getString(R.string.all);
-                    list.add(0, classify);
-                    adapter.setObjects(list);
-                    spinner.setSelection(0);
-                } else {
-                    AoApplication.showToast(R.string.no_network);
-                }
-            }
-        });
-    }
+//    private void get() {
+//        BmobQuery<Classify> query = new BmobQuery<>();
+//        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+//        query.findObjects(new FindListener<Classify>() {
+//            @Override
+//            public void done(List<Classify> list, BmobException e) {
+//                if (e == null) {
+//                    Classify classify = new Classify();
+//                    classify.name = getString(R.string.all);
+//                    list.add(0, classify);
+//                    adapter.setObjects(list);
+//                    spinner.setSelection(0);
+//                } else {
+//                    AoApplication.showToast(R.string.no_network);
+//                }
+//            }
+//        });
+//    }
 
 
 }

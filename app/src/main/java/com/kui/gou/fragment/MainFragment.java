@@ -6,26 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.kui.gou.R;
-import com.kui.gou.activity.AoApplication;
 import com.kui.gou.adapter.MainAdapter;
-import com.kui.gou.entity.Classify;
-import com.kui.gou.entity.Goods;
 import com.kui.gou.listener.OnLoadMoreListener;
-import com.kui.gou.util.Constant;
 import com.kui.gou.view.RecycleViewDivider;
 
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobPointer;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by jiangkuiyuan on 16/9/4.
@@ -53,7 +42,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onRefresh() {
                 page = 0;
-                get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+//                get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
             }
         });
 
@@ -63,12 +52,12 @@ public class MainFragment extends Fragment {
             public void onLoadMore() {
                 if (hasMore) {
                     adapter.addNull();
-                    get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+//                    get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
                 }
             }
         });
         swipeRefreshLayout.setRefreshing(true);
-        get(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+//        get(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         return view;
     }
 
@@ -78,43 +67,43 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(true);
         page = 0;
         this.id = id;
-        get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+//        get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
     }
 
-    private void get(BmobQuery.CachePolicy cachePolicy) {
-        BmobQuery<Goods> query = new BmobQuery<>();
-        query.setCachePolicy(cachePolicy);
-        query.addQueryKeys("name,content,image,price");
-        if (!TextUtils.isEmpty(id)) {
-            Classify classify = new Classify();
-            classify.setObjectId(id);
-            query.addWhereEqualTo("type", new BmobPointer(classify));
-        }
-        query.setLimit(Constant.COUNT);
-        query.setSkip(Constant.COUNT * page);
-        query.findObjects(new FindListener<Goods>() {
-            @Override
-            public void done(List<Goods> object, BmobException e) {
-                swipeRefreshLayout.setRefreshing(false);
-                if (e == null) {
-                    if (object.size() < Constant.COUNT) {
-                        hasMore = false;
-                    } else {
-                        hasMore = true;
-                    }
-                    if (page == 0) {
-                        adapter.setData(object);
-                    } else {
-                        adapter.deleteNull();
-                        adapter.addAll(object);
-                    }
-                    adapter.setLoaded();
-                    page++;
-                } else {
-                    adapter.setLoaded();
-                    AoApplication.showToast(R.string.no_network);
-                }
-            }
-        });
-    }
+//    private void get(BmobQuery.CachePolicy cachePolicy) {
+//        BmobQuery<Goods> query = new BmobQuery<>();
+//        query.setCachePolicy(cachePolicy);
+//        query.addQueryKeys("name,content,image,price");
+//        if (!TextUtils.isEmpty(id)) {
+//            Classify classify = new Classify();
+//            classify.setObjectId(id);
+//            query.addWhereEqualTo("type", new BmobPointer(classify));
+//        }
+//        query.setLimit(Constant.COUNT);
+//        query.setSkip(Constant.COUNT * page);
+//        query.findObjects(new FindListener<Goods>() {
+//            @Override
+//            public void done(List<Goods> object, BmobException e) {
+//                swipeRefreshLayout.setRefreshing(false);
+//                if (e == null) {
+//                    if (object.size() < Constant.COUNT) {
+//                        hasMore = false;
+//                    } else {
+//                        hasMore = true;
+//                    }
+//                    if (page == 0) {
+//                        adapter.setData(object);
+//                    } else {
+//                        adapter.deleteNull();
+//                        adapter.addAll(object);
+//                    }
+//                    adapter.setLoaded();
+//                    page++;
+//                } else {
+//                    adapter.setLoaded();
+//                    AoApplication.showToast(R.string.no_network);
+//                }
+//            }
+//        });
+//    }
 }
