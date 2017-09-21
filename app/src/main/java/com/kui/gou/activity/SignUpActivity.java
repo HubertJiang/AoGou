@@ -8,15 +8,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kui.gou.R;
-import com.kui.gou.entity.User;
 import com.kui.gou.util.Constant;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
@@ -58,32 +55,32 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                             //回调完成
                             if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                                 //提交验证码成功
-                                User user = new User();
-                                user.setUsername(phone);
-                                user.setPassword(password);
-                                user.setNickname(nickname);
-                                user.setMobilePhoneNumberVerified(true);
-                                user.setMobilePhoneNumber(phone);
-                                user.signUp(new SaveListener<User>() {
-                                    @Override
-                                    public void done(User user, BmobException e) {
-                                        swipeRefreshLayout.setRefreshing(false);
-                                        if (e == null) {
-                                            AoApplication.showToast(R.string.sign_up_success);
-                                            finish();
-                                        } else {
-                                            switch (e.getErrorCode()){
-                                                case 202:
-                                                    AoApplication.showToast(R.string.user_exist);
-                                                    break;
-                                                default:
-                                                    AoApplication.showToast(e.toString());
-                                                    break;
-                                            }
-
-                                        }
-                                    }
-                                });
+//                                User user = new User();
+//                                user.setUsername(phone);
+//                                user.setPassword(password);
+//                                user.setNickname(nickname);
+//                                user.setMobilePhoneNumberVerified(true);
+//                                user.setMobilePhoneNumber(phone);
+//                                user.signUp(new SaveListener<User>() {
+//                                    @Override
+//                                    public void done(User user, BmobException e) {
+//                                        swipeRefreshLayout.setRefreshing(false);
+//                                        if (e == null) {
+//                                            AoApplication.showToast(R.string.sign_up_success);
+//                                            finish();
+//                                        } else {
+//                                            switch (e.getErrorCode()){
+//                                                case 202:
+//                                                    AoApplication.showToast(R.string.user_exist);
+//                                                    break;
+//                                                default:
+//                                                    AoApplication.showToast(e.toString());
+//                                                    break;
+//                                            }
+//
+//                                        }
+//                                    }
+//                                });
                             } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                                 //获取验证码成功
                                 swipeRefreshLayout.setRefreshing(false);

@@ -6,12 +6,18 @@ import com.kui.gou.activity.AoApplication;
 import com.kui.gou.smart.BasicCaching;
 import com.kui.gou.smart.SmartCallFactory;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.mob.tools.utils.Data.SHA1;
 
 
 public class RetrofitFactory {
@@ -35,11 +41,27 @@ public class RetrofitFactory {
                 if (BuildConfig.DEBUG) {
                     httpClientBuilder.addInterceptor(logging);
                 }
-
+                httpClientBuilder.addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        long now =System.currentTimeMillis();
+                        Request request = null;
+                        try {
+                            request = chain.request()
+                                    .newBuilder()
+                                    .addHeader("X-APICloud-AppId", Constant.CLOUD_ID)
+                                    .addHeader("X-APICloud-AppKey", SHA1(Constant.CLOUD_ID+"UZ"+Constant.CLOUD_KEY+"UZ"+now)+"."+now)
+                                    .build();
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                        return chain.proceed(request);
+                    }
+                });
                 //build OKHttpClient
                 OkHttpClient okHttpClient = httpClientBuilder.build();
                 Retrofit client = new Retrofit.Builder()
-                        .baseUrl( "http://apicloud.mob.com/")
+                        .baseUrl("https://d.apicloud.com/mcm/api/")
                         .client(okHttpClient)
                         .addConverterFactory(GsonConverterFactory.create())
                         .addCallAdapterFactory(smartFactory)

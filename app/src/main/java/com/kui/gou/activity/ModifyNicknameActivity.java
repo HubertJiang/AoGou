@@ -1,6 +1,5 @@
 package com.kui.gou.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,14 +9,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.kui.gou.R;
-import com.kui.gou.entity.User;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
 
 
 public class ModifyNicknameActivity extends BaseActivity {
@@ -60,28 +51,28 @@ public class ModifyNicknameActivity extends BaseActivity {
     }
 
     private void modify() {
-        User newUser = new User();
-        newUser.setNickname(nickname);
-        BmobUser bmobUser = BmobUser.getCurrentUser();
-        newUser.update(bmobUser.getObjectId(), new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                saveItem.setEnabled(true);
-                if (e == null) {
-                    Intent intent = new Intent();
-                    intent.putExtra("nickname", nickname);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                } else {
-                    try {
-                        JSONObject json = new JSONObject(e.getMessage());
-                        AoApplication.showToast(json.getString("detail"));
-                    } catch (JSONException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
+//        User newUser = new User();
+//        newUser.setNickname(nickname);
+//        BmobUser bmobUser = BmobUser.getCurrentUser();
+//        newUser.update(bmobUser.getObjectId(), new UpdateListener() {
+//            @Override
+//            public void done(BmobException e) {
+//                saveItem.setEnabled(true);
+//                if (e == null) {
+//                    Intent intent = new Intent();
+//                    intent.putExtra("nickname", nickname);
+//                    setResult(RESULT_OK, intent);
+//                    finish();
+//                } else {
+//                    try {
+//                        JSONObject json = new JSONObject(e.getMessage());
+//                        AoApplication.showToast(json.getString("detail"));
+//                    } catch (JSONException ex) {
+//                        ex.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override

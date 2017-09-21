@@ -11,9 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kui.gou.R;
+import com.kui.gou.activity.AoApplication;
 import com.kui.gou.adapter.MainAdapter;
+import com.kui.gou.entity.Goods;
 import com.kui.gou.listener.OnLoadMoreListener;
+import com.kui.gou.util.Constant;
+import com.kui.gou.util.RetrofitFactory;
 import com.kui.gou.view.RecycleViewDivider;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -42,7 +52,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onRefresh() {
                 page = 0;
-//                get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+                get();
             }
         });
 
@@ -57,7 +67,7 @@ public class MainFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setRefreshing(true);
-//        get(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        get();
         return view;
     }
 
@@ -70,40 +80,34 @@ public class MainFragment extends Fragment {
 //        get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
     }
 
-//    private void get(BmobQuery.CachePolicy cachePolicy) {
-//        BmobQuery<Goods> query = new BmobQuery<>();
-//        query.setCachePolicy(cachePolicy);
-//        query.addQueryKeys("name,content,image,price");
-//        if (!TextUtils.isEmpty(id)) {
-//            Classify classify = new Classify();
-//            classify.setObjectId(id);
-//            query.addWhereEqualTo("type", new BmobPointer(classify));
-//        }
-//        query.setLimit(Constant.COUNT);
-//        query.setSkip(Constant.COUNT * page);
-//        query.findObjects(new FindListener<Goods>() {
-//            @Override
-//            public void done(List<Goods> object, BmobException e) {
-//                swipeRefreshLayout.setRefreshing(false);
-//                if (e == null) {
-//                    if (object.size() < Constant.COUNT) {
-//                        hasMore = false;
-//                    } else {
-//                        hasMore = true;
-//                    }
-//                    if (page == 0) {
-//                        adapter.setData(object);
-//                    } else {
-//                        adapter.deleteNull();
-//                        adapter.addAll(object);
-//                    }
-//                    adapter.setLoaded();
-//                    page++;
-//                } else {
-//                    adapter.setLoaded();
-//                    AoApplication.showToast(R.string.no_network);
-//                }
-//            }
-//        });
-//    }
+
+
+    private void get() {
+        RetrofitFactory.getInstance().getGoods().enqueue(new Callback<List<Goods>>() {
+            @Override
+            public void onResponse(Call<List<Goods>> call, Response<List<Goods>> response) {
+                swipeRefreshLayout.setRefreshing(false);
+                if (response.body().size() < Constant.COUNT) {
+                    hasMore = false;
+                } else {
+                    hasMore = true;
+                }
+                if (page == 0) {
+                    adapter.setData(response.body());
+                } else {
+                    adapter.deleteNull();
+                    adapter.addAll(response.body());
+                }
+                adapter.setLoaded();
+                page++;
+            }
+
+            @Override
+            public void onFailure(Call<List<Goods>> call, Throwable throwable) {
+                adapter.setLoaded();
+                AoApplication.showToast(R.string.no_network);
+            }
+        });
+
+    }
 }

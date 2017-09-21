@@ -18,9 +18,6 @@ import com.tencent.bugly.crashreport.CrashReport;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
@@ -138,16 +135,16 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                 } else if (!password.equals(rePassword)) {
                     AoApplication.showToast(R.string.prompt_password_not);
                 } else {
-                    BmobUser.resetPasswordByEmail("xkjiang@yeah.net", new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if(e==null){
-
-                            }else{
-                                AoApplication.showToast("更新用户信息失败:" + e.getMessage());
-                            }
-                        }
-                    });
+//                    BmobUser.resetPasswordByEmail("xkjiang@yeah.net", new UpdateListener() {
+//                        @Override
+//                        public void done(BmobException e) {
+//                            if(e==null){
+//
+//                            }else{
+//                                AoApplication.showToast("更新用户信息失败:" + e.getMessage());
+//                            }
+//                        }
+//                    });
 //                    BmobQuery<BmobUser> query = new BmobQuery<>();
 //                    query.addWhereEqualTo("username", phone);
 //                    query.findObjects(new FindListener<BmobUser>() {

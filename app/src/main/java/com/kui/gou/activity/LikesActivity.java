@@ -7,18 +7,8 @@ import android.support.v7.widget.RecyclerView;
 
 import com.kui.gou.R;
 import com.kui.gou.adapter.MainAdapter;
-import com.kui.gou.entity.Goods;
 import com.kui.gou.listener.OnLoadMoreListener;
-import com.kui.gou.util.Constant;
 import com.kui.gou.view.RecycleViewDivider;
-
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobPointer;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 public class LikesActivity extends BaseActivity {
     private RecyclerView recyclerView;
@@ -62,36 +52,36 @@ public class LikesActivity extends BaseActivity {
     }
 
     private void get() {
-        BmobQuery<Goods> query = new BmobQuery<>();
-//        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
-        query.addWhereRelatedTo("likes", new BmobPointer(BmobUser.getCurrentUser()));
-//查询playerName叫“比目”的数据
-//返回50条数据，如果不加上这条语句，默认返回10条数据
-        query.setLimit(Constant.COUNT);
-        query.setSkip(Constant.COUNT * page);
-//执行查询方法
-        query.findObjects(new FindListener<Goods>() {
-            @Override
-            public void done(List<Goods> object, BmobException e) {
-                swipeRefreshLayout.setRefreshing(false);
-                if (e == null) {
-                    if (object.size() < Constant.COUNT) {
-                        hasMore = false;
-                    } else {
-                        hasMore = true;
-                    }
-                    if (page == 0) {
-                        adapter.setData(object);
-                    } else {
-                        adapter.deleteNull();
-                        adapter.addAll(object);
-                    }
-                    adapter.setLoaded();
-                    page++;
-                } else {
-                    AoApplication.showToast(R.string.no_network);
-                }
-            }
-        });
+//        BmobQuery<Goods> query = new BmobQuery<>();
+////        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
+//        query.addWhereRelatedTo("likes", new BmobPointer(BmobUser.getCurrentUser()));
+////查询playerName叫“比目”的数据
+////返回50条数据，如果不加上这条语句，默认返回10条数据
+//        query.setLimit(Constant.COUNT);
+//        query.setSkip(Constant.COUNT * page);
+////执行查询方法
+//        query.findObjects(new FindListener<Goods>() {
+//            @Override
+//            public void done(List<Goods> object, BmobException e) {
+//                swipeRefreshLayout.setRefreshing(false);
+//                if (e == null) {
+//                    if (object.size() < Constant.COUNT) {
+//                        hasMore = false;
+//                    } else {
+//                        hasMore = true;
+//                    }
+//                    if (page == 0) {
+//                        adapter.setData(object);
+//                    } else {
+//                        adapter.deleteNull();
+//                        adapter.addAll(object);
+//                    }
+//                    adapter.setLoaded();
+//                    page++;
+//                } else {
+//                    AoApplication.showToast(R.string.no_network);
+//                }
+//            }
+//        });
     }
 }

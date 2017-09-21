@@ -10,10 +10,6 @@ import android.widget.EditText;
 
 import com.kui.gou.R;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
-
 
 public class ModifyPasswordActivity extends BaseActivity implements TextWatcher {
     private EditText editText, newEditText, reEditText;
@@ -37,22 +33,22 @@ public class ModifyPasswordActivity extends BaseActivity implements TextWatcher 
     }
 
     private void modify() {
-        BmobUser.updateCurrentUserPassword(pass, newPass, new UpdateListener() {
-
-            @Override
-            public void done(BmobException e) {
-                saveItem.setEnabled(true);
-                if (e == null) {
-                    AoApplication.showToast(R.string.password_success);
-                    finish();
-                } else if (e.getErrorCode() == 210) {
-                    AoApplication.showToast(R.string.password_error);
-                } else {
-                    AoApplication.showToast(R.string.no_network);
-                }
-            }
-
-        });
+//        BmobUser.updateCurrentUserPassword(pass, newPass, new UpdateListener() {
+//
+//            @Override
+//            public void done(BmobException e) {
+//                saveItem.setEnabled(true);
+//                if (e == null) {
+//                    AoApplication.showToast(R.string.password_success);
+//                    finish();
+//                } else if (e.getErrorCode() == 210) {
+//                    AoApplication.showToast(R.string.password_error);
+//                } else {
+//                    AoApplication.showToast(R.string.no_network);
+//                }
+//            }
+//
+//        });
     }
 
     @Override

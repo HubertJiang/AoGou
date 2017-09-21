@@ -9,22 +9,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.kui.gou.R;
 import com.kui.gou.entity.User;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.listener.UploadFileListener;
-import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 /**
@@ -39,7 +26,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
     private final int REQUEST_ADDRESS = 1, REQUEST_IMAGE = 2, REQUEST_NAME = 3;
     private int index = -1;
     private String[] genderArray;
-    private ArrayList<BmobFile> images;
+//    private ArrayList<BmobFile> images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +35,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         initialize();
 
         nicknameTextView.setText(user.getNickname());
-        genderTextView.setText(user.getEmail());
+//        genderTextView.setText(user.getEmail());
         addressTextView.setText(user.getAddress());
         genderText.setText(user.getGender());
         for (int i = 0; i < genderArray.length; i++) {
@@ -56,11 +43,11 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                 index = i;
             }
         }
-        if (user.getAvatar() != null) {
-            images = new ArrayList<>();
-            images.add(user.getAvatar());
-            Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImageView);
-        }
+//        if (user.getAvatar() != null) {
+//            images = new ArrayList<>();
+//            images.add(user.getAvatar());
+//            Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImageView);
+//        }
         findViewById(R.id.address).setOnClickListener(this);
         findViewById(R.id.avatar).setOnClickListener(this);
         findViewById(R.id.nickname).setOnClickListener(this);
@@ -77,7 +64,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         nicknameTextView = (TextView) findViewById(R.id.nicknameTextView);
         genderText = (TextView) findViewById(R.id.gender_text);
         avatarImageView = (ImageView) findViewById(R.id.avatarImageView);
-        user = BmobUser.getCurrentUser(User.class);
+//        user = BmobUser.getCurrentUser(User.class);
         genderArray = getResources().getStringArray(R.array.gender);
     }
 
@@ -96,11 +83,11 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent, REQUEST_NAME);
                 break;
             case R.id.avatarImageView:
-                if (images != null) {
-                    intent = new Intent(this, ImageViewActivity.class);
-                    intent.putExtra("images", images);
-                    startActivity(intent);
-                }
+//                if (images != null) {
+//                    intent = new Intent(this, ImageViewActivity.class);
+//                    intent.putExtra("images", images);
+//                    startActivity(intent);
+//                }
                 break;
             case R.id.avatar:
                 intent = new Intent(this, MultiImageSelectorActivity.class);
@@ -127,32 +114,32 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
               startActivity(new Intent(this,ModifyPasswordActivity.class));
                 break;
             case R.id.exit:
-                BmobUser.logOut();
+//                BmobUser.logOut();
                 finish();
                 break;
         }
     }
 
     private void modify(String gender) {
-        genderText.setText(gender);
-        User newUser = new User();
-        newUser.setGender(gender);
-        BmobUser bmobUser = BmobUser.getCurrentUser();
-        newUser.update(bmobUser.getObjectId(), new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if (e == null) {
-
-                } else {
-                    try {
-                        JSONObject json = new JSONObject(e.getMessage());
-                        AoApplication.showToast(json.getString("detail"));
-                    } catch (JSONException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
+//        genderText.setText(gender);
+//        User newUser = new User();
+//        newUser.setGender(gender);
+//        BmobUser bmobUser = BmobUser.getCurrentUser();
+//        newUser.update(bmobUser.getObjectId(), new UpdateListener() {
+//            @Override
+//            public void done(BmobException e) {
+//                if (e == null) {
+//
+//                } else {
+//                    try {
+//                        JSONObject json = new JSONObject(e.getMessage());
+//                        AoApplication.showToast(json.getString("detail"));
+//                    } catch (JSONException ex) {
+//                        ex.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -162,47 +149,47 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE:
-                    ArrayList<String> images = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
-                    final BmobFile bmobFile = new BmobFile(new File(images.get(0)));
-                    bmobFile.uploadblock(new UploadFileListener() {
-
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                final User newUser = new User();
-                                newUser.setAvatar(bmobFile);
-                                BmobUser bmobUser = BmobUser.getCurrentUser();
-                                newUser.update(bmobUser.getObjectId(), new UpdateListener() {
-                                    @Override
-                                    public void done(BmobException e) {
-                                        if (e == null) {
-                                            Glide.with(AoApplication.getInstance()).load(newUser.getAvatar().getUrl()).into(avatarImageView);
-                                        } else {
-                                            try {
-                                                JSONObject json = new JSONObject(e.getMessage());
-                                                AoApplication.showToast(json.getString("detail"));
-                                            } catch (JSONException ex) {
-                                                ex.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                });
-                            } else {
-                                try {
-                                    JSONObject json = new JSONObject(e.getMessage());
-                                    AoApplication.showToast(json.getString("detail"));
-                                } catch (JSONException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-
-                        }
-
-                        @Override
-                        public void onProgress(Integer value) {
-                            // 返回的上传进度（百分比）
-                        }
-                    });
+//                    ArrayList<String> images = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
+//                    final BmobFile bmobFile = new BmobFile(new File(images.get(0)));
+//                    bmobFile.uploadblock(new UploadFileListener() {
+//
+//                        @Override
+//                        public void done(BmobException e) {
+//                            if (e == null) {
+//                                final User newUser = new User();
+//                                newUser.setAvatar(bmobFile);
+//                                BmobUser bmobUser = BmobUser.getCurrentUser();
+//                                newUser.update(bmobUser.getObjectId(), new UpdateListener() {
+//                                    @Override
+//                                    public void done(BmobException e) {
+//                                        if (e == null) {
+//                                            Glide.with(AoApplication.getInstance()).load(newUser.getAvatar().getUrl()).into(avatarImageView);
+//                                        } else {
+//                                            try {
+//                                                JSONObject json = new JSONObject(e.getMessage());
+//                                                AoApplication.showToast(json.getString("detail"));
+//                                            } catch (JSONException ex) {
+//                                                ex.printStackTrace();
+//                                            }
+//                                        }
+//                                    }
+//                                });
+//                            } else {
+//                                try {
+//                                    JSONObject json = new JSONObject(e.getMessage());
+//                                    AoApplication.showToast(json.getString("detail"));
+//                                } catch (JSONException ex) {
+//                                    ex.printStackTrace();
+//                                }
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onProgress(Integer value) {
+//                            // 返回的上传进度（百分比）
+//                        }
+//                    });
                     break;
                 case REQUEST_ADDRESS:
                     addressTextView.setText(data.getStringExtra("address"));

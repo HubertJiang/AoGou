@@ -9,7 +9,6 @@ import com.kui.gou.R;
 import com.sobot.chat.SobotApi;
 import com.tencent.bugly.Bugly;
 
-import cn.bmob.v3.Bmob;
 
 
 /**
@@ -24,7 +23,6 @@ public class AoApplication extends Application {
         super.onCreate();
         instance = this;
         Bugly.init(getApplicationContext(), "900027438", false);
-        Bmob.initialize(this, "3e6164ca438e7534e0174f7c6ae78247");
 
         SobotApi.setNotificationFlag(getApplicationContext(),true, R.drawable.sobot_logo_small_icon,R.drawable.sobot_logo_icon);
     }

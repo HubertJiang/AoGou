@@ -15,9 +15,6 @@ import android.widget.TextView;
 import com.kui.gou.R;
 import com.kui.gou.entity.User;
 
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-
 /**
  * A login screen that offers login via email/password.
  */
@@ -89,20 +86,20 @@ public class SignInActivity extends BaseActivity implements OnClickListener {
         } else {
             swipeRefreshLayout.setRefreshing(true);
             User user = new User();
-            user.setUsername(phone);
-            user.setPassword(code);
-            user.login(new SaveListener<User>() {
-                @Override
-                public void done(User user, BmobException e) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    if (user != null) {
-                        finish();
-                    } else {
-                        AoApplication.showToast(R.string.login_error);
-
-                    }
-                }
-            });
+//            user.setUsername(phone);
+//            user.setPassword(code);
+//            user.login(new SaveListener<User>() {
+//                @Override
+//                public void done(User user, BmobException e) {
+//                    swipeRefreshLayout.setRefreshing(false);
+//                    if (user != null) {
+//                        finish();
+//                    } else {
+//                        AoApplication.showToast(R.string.login_error);
+//
+//                    }
+//                }
+//            });
         }
     }
 

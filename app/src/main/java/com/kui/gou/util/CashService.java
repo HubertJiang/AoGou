@@ -2,7 +2,9 @@ package com.kui.gou.util;
 
 
 import com.kui.gou.entity.ApiResponse;
+import com.kui.gou.entity.Goods;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -19,8 +21,15 @@ import retrofit2.http.Query;
  * Created by liweihui on 16/7/4.
  */
 public interface CashService {
+    /**
+     * cloud api
+     */
+    @GET("goods?filter={\"where\":{},\"skip\":0,\"limit\":20}")
+    Call<List<Goods>> getGoods();
 
-
+    /**
+     * mob api
+     */
     @GET("http://apicloud.mob.com/v1/cook/category/query")
     Call<ApiResponse> getCookCategory(@Query("key") String appKey);
 
