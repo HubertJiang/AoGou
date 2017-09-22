@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.JsonObject;
 import com.kui.gou.R;
 import com.kui.gou.activity.AoApplication;
 import com.kui.gou.adapter.MainAdapter;
@@ -33,7 +34,7 @@ public class MainFragment extends Fragment {
     private RecyclerView recyclerView;
     private MainAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private int page;
+    private int skip;
     private boolean hasMore;
     private String id;
 
@@ -51,7 +52,7 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                page = 0;
+                skip = 0;
                 get();
             }
         });
@@ -62,7 +63,7 @@ public class MainFragment extends Fragment {
             public void onLoadMore() {
                 if (hasMore) {
                     adapter.addNull();
-//                    get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+                    get();
                 }
             }
         });
@@ -75,7 +76,7 @@ public class MainFragment extends Fragment {
         if (this.id == id)
             return;
         swipeRefreshLayout.setRefreshing(true);
-        page = 0;
+        skip = 0;
         this.id = id;
 //        get(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
     }
@@ -83,7 +84,10 @@ public class MainFragment extends Fragment {
 
 
     private void get() {
-        RetrofitFactory.getInstance().getGoods().enqueue(new Callback<List<Goods>>() {
+        JsonObject jsonObject=new JsonObject();
+        jsonObject.addProperty("limit",Constant.COUNT);
+        jsonObject.addProperty("skip",skip);
+        RetrofitFactory.getInstance().getGoods(jsonObject.toString()).enqueue(new Callback<List<Goods>>() {
             @Override
             public void onResponse(Call<List<Goods>> call, Response<List<Goods>> response) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -92,14 +96,14 @@ public class MainFragment extends Fragment {
                 } else {
                     hasMore = true;
                 }
-                if (page == 0) {
+                if (skip == 0) {
                     adapter.setData(response.body());
                 } else {
                     adapter.deleteNull();
                     adapter.addAll(response.body());
                 }
                 adapter.setLoaded();
-                page++;
+                skip+=Constant.COUNT;
             }
 
             @Override

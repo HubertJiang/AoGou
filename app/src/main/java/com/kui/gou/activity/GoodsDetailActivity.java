@@ -10,7 +10,12 @@ import com.kui.gou.R;
 import com.kui.gou.adapter.ImageAdapter;
 import com.kui.gou.entity.Goods;
 import com.kui.gou.entity.User;
+import com.kui.gou.util.RetrofitFactory;
 import com.kui.gou.view.CirclePageIndicator;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GoodsDetailActivity extends BaseActivity implements View.OnClickListener {
     private String id;
@@ -42,37 +47,36 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
         swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setEnabled(false);
 
-//        BmobQuery<Goods> query = new BmobQuery<>();
-//        query.getObject(id, new QueryListener<Goods>() {
-//
-//            @Override
-//            public void done(Goods object, BmobException e) {
-//                goods = object;
-//                swipeRefreshLayout.setRefreshing(false);
-//                if (e == null) {
-//                    getSupportActionBar().setTitle(object.name);
-//                    content.setText(object.content);
-//                    ArrayList<BmobFile> images = new ArrayList<>();
-//                    images.add(object.image);
-//                    if (object.image1 != null) {
-//                        images.add(object.image1);
-//                    }
-//                    if (object.image2 != null) {
-//                        images.add(object.image2);
-//                    }
-//                    if (object.image3 != null) {
-//                        images.add(object.image3);
-//                    }
-//                    adapter.setImages(images);
-//                    viewPager.setAdapter(adapter);
-//                    circlePageIndicator.setViewPager(viewPager);
-//
-//                } else {
-//                    AoApplication.showToast(R.string.no_network);
+        RetrofitFactory.getInstance().getGoodsDetail(id).enqueue(new Callback<Goods>() {
+            @Override
+            public void onResponse(Call<Goods> call, Response<Goods> response) {
+                goods=response.body();
+                swipeRefreshLayout.setRefreshing(false);
+                getSupportActionBar().setTitle(goods.title);
+                content.setText(goods.content);
+//                ArrayList<BmobFile> images = new ArrayList<>();
+//                images.add(object.image);
+//                if (object.image1 != null) {
+//                    images.add(object.image1);
 //                }
-//            }
-//
-//        });
+//                if (object.image2 != null) {
+//                    images.add(object.image2);
+//                }
+//                if (object.image3 != null) {
+//                    images.add(object.image3);
+//                }
+//                adapter.setImages(images);
+//                viewPager.setAdapter(adapter);
+//                circlePageIndicator.setViewPager(viewPager);
+            }
+
+            @Override
+            public void onFailure(Call<Goods> call, Throwable throwable) {
+                swipeRefreshLayout.setRefreshing(false);
+                AoApplication.showToast(R.string.no_network);
+            }
+        });
+
 
     }
 

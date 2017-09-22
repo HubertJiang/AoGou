@@ -15,6 +15,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -24,8 +25,11 @@ public interface CashService {
     /**
      * cloud api
      */
-    @GET("goods?filter={\"where\":{},\"skip\":0,\"limit\":20}")
-    Call<List<Goods>> getGoods();
+    @GET("goods")
+    Call<List<Goods>> getGoods(@Query("filter") String filter);
+
+    @GET("goods/{id}")
+    Call<Goods> getGoodsDetail(@Path("id") String id);
 
     /**
      * mob api
@@ -42,7 +46,7 @@ public interface CashService {
 
     @GET("http://apicloud.mob.com/wx/article/search")
     Call<ApiResponse> getWeChat(@Query("key") String appKey, @Query("cid") String cid,
-                                        @Query("page") int page, @Query("size") int size);
+                                @Query("page") int page, @Query("size") int size);
 
 
     /**
