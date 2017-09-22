@@ -6,11 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.kui.gou.R;
 import com.kui.gou.ViewHolder.LoadingViewHolder;
 import com.kui.gou.ViewHolder.MainViewHolder;
 import com.kui.gou.entity.Goods;
-import com.kui.gou.util.FormatUtil;
 
 import java.util.List;
 
@@ -39,11 +39,11 @@ public class MainAdapter extends BaseAdapter<Goods> {
             ((LoadingViewHolder) holder).loading.setVisibility(View.VISIBLE);
         } else if (holder instanceof MainViewHolder) {
             final Goods goods = getItem(position);
-            ((MainViewHolder) holder).name.setText(goods.name);
+            ((MainViewHolder) holder).name.setText(goods.title);
             ((MainViewHolder) holder).content.setText(goods.content);
-            ((MainViewHolder) holder).money.setText(FormatUtil.moneyFormat(goods.price));
-//            if (goods.image != null)
-//                Glide.with(getContext()).load(goods.image.getUrl()).into(((MainViewHolder) holder).imageView);
+//            ((MainViewHolder) holder).money.setText(FormatUtil.moneyFormat(goods.price));
+            if (goods.image != null)
+                Glide.with(getContext()).load(goods.image.url).into(((MainViewHolder) holder).imageView);
 
 //            holder.itemView.setOnClickListener(new View.OnClickListener() {
 //                @Override

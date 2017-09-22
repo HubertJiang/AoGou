@@ -104,6 +104,7 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Goods>> call, Throwable throwable) {
+                swipeRefreshLayout.setRefreshing(false);
                 adapter.setLoaded();
                 AoApplication.showToast(R.string.no_network);
             }

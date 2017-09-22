@@ -17,8 +17,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.mob.tools.utils.Data.SHA1;
-
 
 public class RetrofitFactory {
 
@@ -32,7 +30,7 @@ public class RetrofitFactory {
                 smartFactory = new SmartCallFactory(BasicCaching.fromCtx(AoApplication.getInstance()));
                 HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
                 // set your desired log level
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+                logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
                 //设置OKHttpClient
                 OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
                         .connectTimeout(2, TimeUnit.SECONDS)
@@ -50,7 +48,7 @@ public class RetrofitFactory {
                             request = chain.request()
                                     .newBuilder()
                                     .addHeader("X-APICloud-AppId", Constant.CLOUD_ID)
-                                    .addHeader("X-APICloud-AppKey", SHA1(Constant.CLOUD_ID+"UZ"+Constant.CLOUD_KEY+"UZ"+now)+"."+now)
+                                    .addHeader("X-APICloud-AppKey", FormatUtil.stringMD5(Constant.CLOUD_ID+"UZ"+Constant.CLOUD_KEY+"UZ"+now)+"."+now)
                                     .build();
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
