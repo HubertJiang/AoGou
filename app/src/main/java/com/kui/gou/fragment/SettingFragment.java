@@ -9,15 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kui.gou.R;
+import com.kui.gou.activity.AoApplication;
 import com.kui.gou.activity.InformationActivity;
 import com.kui.gou.activity.LikesActivity;
 import com.kui.gou.activity.SignInActivity;
 import com.kui.gou.entity.User;
 import com.kui.gou.util.Constant;
+import com.kui.gou.util.RetrofitFactory;
 import com.sobot.chat.SobotApi;
 import com.sobot.chat.api.model.Information;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class SettingFragment extends Fragment implements View.OnClickListener {
@@ -43,6 +49,30 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    private void getUser() {
+        RetrofitFactory.getInstance().getUser(AoApplication.getUserId()).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    user = response.body();
+                    if (user == null) {
+                        avatarImage.setImageResource(R.mipmap.ic_avatar);
+                        nicknameText.setText(R.string.sign_in_hint);
+                    } else {
+                        nicknameText.setText(user.nickname);
+                        if (user.avatar != null) {
+                            Glide.with(AoApplication.getInstance()).load(user.avatar.url).into(avatarImage);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+    }
 
     @Override
     public void onClick(View v) {
@@ -57,7 +87,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                     Information info = new Information();
                     info.setAppkey(Constant.SERVICE_KEY);
                     info.setColor("#3F51B5");
-                    info.setUname(user.getNickname());
+//                    info.setUname(user.getNickname());
 //                    info.setPhone(user.getMobilePhoneNumber());
 //                    info.setFace(user.getAvatar() == null ? null : user.getAvatar().getUrl());
                     SobotApi.startSobotChat(getActivity(), info);
@@ -73,15 +103,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-//        user = BmobUser.getCurrentUser(User.class);
-//        if (user == null) {
-//            avatarImage.setImageResource(R.mipmap.ic_avatar);
-//            nicknameText.setText(R.string.sign_in_hint);
-//        } else {
-//            nicknameText.setText(user.getNickname());
-//            if (user.getAvatar() != null) {
-//                Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImage);
-//            }
-//        }
+        getUser();
     }
 }

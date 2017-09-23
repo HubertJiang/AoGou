@@ -30,7 +30,7 @@ public class RetrofitFactory {
                 smartFactory = new SmartCallFactory(BasicCaching.fromCtx(AoApplication.getInstance()));
                 HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
                 // set your desired log level
-                logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
                 //设置OKHttpClient
                 OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
                         .connectTimeout(2, TimeUnit.SECONDS)

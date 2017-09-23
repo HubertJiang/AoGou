@@ -34,15 +34,15 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_information);
         initialize();
 
-        nicknameTextView.setText(user.getNickname());
+//        nicknameTextView.setText(user.getNickname());
 //        genderTextView.setText(user.getEmail());
-        addressTextView.setText(user.getAddress());
-        genderText.setText(user.getGender());
-        for (int i = 0; i < genderArray.length; i++) {
-            if (genderArray[i].equals(user.getGender())) {
-                index = i;
-            }
-        }
+//        addressTextView.setText(user.getAddress());
+//        genderText.setText(user.getGender());
+//        for (int i = 0; i < genderArray.length; i++) {
+//            if (genderArray[i].equals(user.getGender())) {
+//                index = i;
+//            }
+//        }
 //        if (user.getAvatar() != null) {
 //            images = new ArrayList<>();
 //            images.add(user.getAvatar());
@@ -74,12 +74,12 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.address:
                 intent = new Intent(this, ModifyAddressActivity.class);
-                intent.putExtra("address", user.getAddress());
+//                intent.putExtra("address", user.getAddress());
                 startActivityForResult(intent, REQUEST_ADDRESS);
                 break;
             case R.id.nickname:
                 intent = new Intent(this, ModifyNicknameActivity.class);
-                intent.putExtra("nickname", user.getNickname());
+//                intent.putExtra("nickname", user.getNickname());
                 startActivityForResult(intent, REQUEST_NAME);
                 break;
             case R.id.avatarImageView:

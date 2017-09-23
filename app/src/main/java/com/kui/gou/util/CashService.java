@@ -3,6 +3,7 @@ package com.kui.gou.util;
 
 import com.kui.gou.entity.ApiResponse;
 import com.kui.gou.entity.Goods;
+import com.kui.gou.entity.User;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,8 @@ import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -31,6 +34,16 @@ public interface CashService {
     @GET("goods/{id}")
     Call<Goods> getGoodsDetail(@Path("id") String id);
 
+    @FormUrlEncoded
+    @POST("user/login")
+    Call<User> signIn(@Field("username") String name, @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST("user")
+    Call<User> signUp(@Field("username") String name, @Field("password") String password,@Field("nickname") String nickname);
+
+    @GET("user/{id}")
+    Call<User> getUser(@Path("id") String id);
     /**
      * mob api
      */

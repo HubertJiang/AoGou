@@ -14,6 +14,11 @@ import android.widget.TextView;
 
 import com.kui.gou.R;
 import com.kui.gou.entity.User;
+import com.kui.gou.util.RetrofitFactory;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A login screen that offers login via email/password.
@@ -86,20 +91,24 @@ public class SignInActivity extends BaseActivity implements OnClickListener {
         } else {
             swipeRefreshLayout.setRefreshing(true);
             User user = new User();
-//            user.setUsername(phone);
-//            user.setPassword(code);
-//            user.login(new SaveListener<User>() {
-//                @Override
-//                public void done(User user, BmobException e) {
-//                    swipeRefreshLayout.setRefreshing(false);
-//                    if (user != null) {
-//                        finish();
-//                    } else {
-//                        AoApplication.showToast(R.string.login_error);
-//
-//                    }
-//                }
-//            });
+            RetrofitFactory.getInstance().signIn(phone,code).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                   if(response.isSuccessful()){
+                       AoApplication.setUserId(response.body().userId);
+                       finish();
+                   }else {
+                       AoApplication.showToast(R.string.login_error);
+                   }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    AoApplication.showToast(R.string.no_network);
+                }
+            });
         }
     }
 

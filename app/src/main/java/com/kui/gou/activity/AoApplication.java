@@ -3,9 +3,11 @@ package com.kui.gou.activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.kui.gou.R;
+import com.kui.gou.util.SPUtils;
 import com.sobot.chat.SobotApi;
 import com.tencent.bugly.Bugly;
 
@@ -17,6 +19,7 @@ import com.tencent.bugly.Bugly;
 public class AoApplication extends Application {
     private static Application instance;
     private static Toast toast;
+    private static String userId;
 
     @Override
     public void onCreate() {
@@ -48,6 +51,18 @@ public class AoApplication extends Application {
 
     public static Application getInstance() {
         return instance;
+    }
+
+    public static String getUserId() {
+        if(TextUtils.isEmpty(userId)){
+            userId= SPUtils.getString(instance,SPUtils.UID);
+        }
+        return userId;
+    }
+
+    public static void setUserId(String userId) {
+        AoApplication.userId = userId;
+        SPUtils.setString(instance,SPUtils.UID,userId);
     }
 
     /**

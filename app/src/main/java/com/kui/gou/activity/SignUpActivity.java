@@ -8,7 +8,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kui.gou.R;
+import com.kui.gou.entity.User;
 import com.kui.gou.util.Constant;
+import com.kui.gou.util.RetrofitFactory;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONException;
@@ -16,6 +18,9 @@ import org.json.JSONObject;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class SignUpActivity extends BaseActivity implements View.OnClickListener {
@@ -118,6 +123,32 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         findViewById(R.id.sign_in_button).setOnClickListener(this);
     }
 
+    private void signUp() {
+        phone = numberText.getText().toString();
+        code = codeText.getText().toString();
+        password = passwordText.getText().toString();
+        nickname = nicknameText.getText().toString();
+        RetrofitFactory.getInstance().signUp(phone, password, nickname).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    finish();
+                } else if (response.code() == 202) {
+                    AoApplication.showToast(R.string.user_exist);
+                } else {
+                    swipeRefreshLayout.setRefreshing(false);
+                    AoApplication.showToast(R.string.no_network);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+                AoApplication.showToast(R.string.no_network);
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -132,7 +163,8 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
             case R.id.sign_in_button:
-                attemptLogin();
+//                attemptLogin();
+                signUp();
                 break;
         }
     }
