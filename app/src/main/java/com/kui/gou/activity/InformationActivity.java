@@ -11,8 +11,12 @@ import android.widget.TextView;
 
 import com.kui.gou.R;
 import com.kui.gou.entity.User;
+import com.kui.gou.util.RetrofitFactory;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Administrator on 2015/3/6.
@@ -74,12 +78,12 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.address:
                 intent = new Intent(this, ModifyAddressActivity.class);
-//                intent.putExtra("address", user.getAddress());
+                intent.putExtra("address", user.address);
                 startActivityForResult(intent, REQUEST_ADDRESS);
                 break;
             case R.id.nickname:
                 intent = new Intent(this, ModifyNicknameActivity.class);
-//                intent.putExtra("nickname", user.getNickname());
+                intent.putExtra("nickname", user.nickname);
                 startActivityForResult(intent, REQUEST_NAME);
                 break;
             case R.id.avatarImageView:
@@ -111,35 +115,32 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                 builder.show();
                 break;
             case R.id.password:
-              startActivity(new Intent(this,ModifyPasswordActivity.class));
+                startActivity(new Intent(this, ModifyPasswordActivity.class));
                 break;
             case R.id.exit:
-//                BmobUser.logOut();
+                AoApplication.setUserId(null);
+                AoApplication.setUserName(null);
                 finish();
                 break;
         }
     }
 
     private void modify(String gender) {
-//        genderText.setText(gender);
-//        User newUser = new User();
-//        newUser.setGender(gender);
-//        BmobUser bmobUser = BmobUser.getCurrentUser();
-//        newUser.update(bmobUser.getObjectId(), new UpdateListener() {
-//            @Override
-//            public void done(BmobException e) {
-//                if (e == null) {
-//
-//                } else {
-//                    try {
-//                        JSONObject json = new JSONObject(e.getMessage());
-//                        AoApplication.showToast(json.getString("detail"));
-//                    } catch (JSONException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
+        RetrofitFactory.getInstance().modifyGender(AoApplication.getUserId(), gender).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+
+                } else {
+                    AoApplication.showToast(R.string.no_network);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                AoApplication.showToast(R.string.no_network);
+            }
+        });
     }
 
     @Override

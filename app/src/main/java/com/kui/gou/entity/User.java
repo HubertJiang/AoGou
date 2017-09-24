@@ -5,8 +5,11 @@ package com.kui.gou.entity;
  */
 public class User {
     public String id;
+    public String username;
     public long ttl;
     public String userId;
     public String nickname;
+    public String address;
+    public String gender;
     public Image avatar;
 }

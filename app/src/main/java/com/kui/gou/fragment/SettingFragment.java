@@ -3,6 +3,7 @@ package com.kui.gou.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                AoApplication.showToast(R.string.no_network);
             }
         });
     }
@@ -103,6 +104,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        getUser();
+        if (TextUtils.isEmpty(AoApplication.getUserId())) {
+            user=null;
+            avatarImage.setImageResource(R.mipmap.ic_avatar);
+            nicknameText.setText(R.string.sign_in_hint);
+        } else {
+            getUser();
+        }
     }
 }

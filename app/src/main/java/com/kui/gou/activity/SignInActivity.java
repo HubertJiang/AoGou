@@ -96,6 +96,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener {
                 public void onResponse(Call<User> call, Response<User> response) {
                    if(response.isSuccessful()){
                        AoApplication.setUserId(response.body().userId);
+                       AoApplication.setUserName(phone);
                        finish();
                    }else {
                        AoApplication.showToast(R.string.login_error);

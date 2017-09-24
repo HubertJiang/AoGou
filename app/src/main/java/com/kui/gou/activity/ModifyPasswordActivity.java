@@ -9,6 +9,12 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.kui.gou.R;
+import com.kui.gou.entity.User;
+import com.kui.gou.util.RetrofitFactory;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ModifyPasswordActivity extends BaseActivity implements TextWatcher {
@@ -33,6 +39,35 @@ public class ModifyPasswordActivity extends BaseActivity implements TextWatcher 
     }
 
     private void modify() {
+        RetrofitFactory.getInstance().signIn(AoApplication.getUserName(), pass).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    RetrofitFactory.getInstance().modifyPassword(AoApplication.getUserId(), newPass).enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            AoApplication.showToast(R.string.password_success);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            saveItem.setEnabled(true);
+                            AoApplication.showToast(R.string.no_network);
+                        }
+                    });
+                } else {
+                    saveItem.setEnabled(true);
+                    AoApplication.showToast(R.string.password_error);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                saveItem.setEnabled(true);
+                AoApplication.showToast(R.string.no_network);
+            }
+        });
 //        BmobUser.updateCurrentUserPassword(pass, newPass, new UpdateListener() {
 //
 //            @Override

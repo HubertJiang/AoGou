@@ -16,6 +16,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
@@ -40,10 +41,27 @@ public interface CashService {
 
     @FormUrlEncoded
     @POST("user")
-    Call<User> signUp(@Field("username") String name, @Field("password") String password,@Field("nickname") String nickname);
+    Call<User> signUp(@Field("username") String name, @Field("password") String password, @Field("nickname") String nickname);
+
+    @FormUrlEncoded
+    @PUT("user/{id}")
+    Call<User> modifyNickname(@Path("id") String id, @Field("nickname") String nickname);
+
+    @FormUrlEncoded
+    @PUT("user/{id}")
+    Call<User> modifyGender(@Path("id") String id, @Field("gender") String gender);
+
+    @FormUrlEncoded
+    @PUT("user/{id}")
+    Call<User> modifyAddress(@Path("id") String id, @Field("address") String address);
+
+    @FormUrlEncoded
+    @PUT("user/{id}")
+    Call<User> modifyPassword(@Path("id") String id, @Field("password") String password);
 
     @GET("user/{id}")
     Call<User> getUser(@Path("id") String id);
+
     /**
      * mob api
      */

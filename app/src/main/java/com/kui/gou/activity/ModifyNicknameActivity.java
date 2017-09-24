@@ -1,5 +1,6 @@
 package com.kui.gou.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -9,6 +10,12 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.kui.gou.R;
+import com.kui.gou.entity.User;
+import com.kui.gou.util.RetrofitFactory;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ModifyNicknameActivity extends BaseActivity {
@@ -51,28 +58,26 @@ public class ModifyNicknameActivity extends BaseActivity {
     }
 
     private void modify() {
-//        User newUser = new User();
-//        newUser.setNickname(nickname);
-//        BmobUser bmobUser = BmobUser.getCurrentUser();
-//        newUser.update(bmobUser.getObjectId(), new UpdateListener() {
-//            @Override
-//            public void done(BmobException e) {
-//                saveItem.setEnabled(true);
-//                if (e == null) {
-//                    Intent intent = new Intent();
-//                    intent.putExtra("nickname", nickname);
-//                    setResult(RESULT_OK, intent);
-//                    finish();
-//                } else {
-//                    try {
-//                        JSONObject json = new JSONObject(e.getMessage());
-//                        AoApplication.showToast(json.getString("detail"));
-//                    } catch (JSONException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
+        RetrofitFactory.getInstance().modifyNickname(AoApplication.getUserId(), nickname).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                saveItem.setEnabled(true);
+                if (response.isSuccessful()) {
+                    Intent intent = new Intent();
+                    intent.putExtra("nickname", nickname);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    AoApplication.showToast(R.string.no_network);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                saveItem.setEnabled(true);
+                AoApplication.showToast(R.string.no_network);
+            }
+        });
     }
 
     @Override

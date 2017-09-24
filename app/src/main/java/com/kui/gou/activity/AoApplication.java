@@ -20,6 +20,7 @@ public class AoApplication extends Application {
     private static Application instance;
     private static Toast toast;
     private static String userId;
+    private static String userName;
 
     @Override
     public void onCreate() {
@@ -63,6 +64,18 @@ public class AoApplication extends Application {
     public static void setUserId(String userId) {
         AoApplication.userId = userId;
         SPUtils.setString(instance,SPUtils.UID,userId);
+    }
+
+    public static String getUserName() {
+        if(TextUtils.isEmpty(userName)){
+            userName= SPUtils.getString(instance,SPUtils.NAME);
+        }
+        return userName;
+    }
+
+    public static void setUserName(String userName) {
+        AoApplication.userName = userName;
+        SPUtils.setString(instance,SPUtils.NAME,userName);
     }
 
     /**
