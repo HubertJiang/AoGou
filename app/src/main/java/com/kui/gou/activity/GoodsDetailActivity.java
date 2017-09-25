@@ -80,7 +80,18 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-//    private void get() {
+    private void get() {
+        RetrofitFactory.getInstance().collection(AoApplication.getUserId(),goods.id).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable throwable) {
+
+            }
+        });
 //        BmobQuery<Goods> query = new BmobQuery<>();
 //        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
 //        List<BmobQuery<Goods>> queries = new ArrayList<>();
@@ -102,16 +113,18 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
 //            }
 //
 //        });
-//    }
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.likes_text_view:
+            case R.id.likes_text_view:
 //                if (user == null) {
 //                    startActivity(new Intent(this, SignInActivity.class));
-//                } else {
-//                    likesTextView.setEnabled(false);
+//                } else
+                    {
+                    likesTextView.setEnabled(false);
+                    get();
 //                    swipeRefreshLayout.setRefreshing(true);
 //                    BmobRelation relation = new BmobRelation();
 //                    if (likesTextView.getText().equals(getString(R.string.favorite))) {
@@ -137,8 +150,8 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
 //                            }
 //                        }
 //                    });
-//                }
-//                break;
+                }
+                break;
 //            case R.id.service_text_view:
 //                if (user == null) {
 //                    startActivity(new Intent(this, SignInActivity.class));

@@ -67,6 +67,11 @@ public interface CashService {
     @GET("user/{id}")
     Call<User> getUser(@Path("id") String id);
 
+    @FormUrlEncoded
+    @POST("user/{id}/collection")
+    Call<User> collection(@Path("id") String id, @Field("collection") String collection);
+
+
     /**
      * mob api
      */
