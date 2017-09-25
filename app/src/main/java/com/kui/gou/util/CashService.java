@@ -3,6 +3,7 @@ package com.kui.gou.util;
 
 import com.kui.gou.entity.ApiResponse;
 import com.kui.gou.entity.Goods;
+import com.kui.gou.entity.Image;
 import com.kui.gou.entity.User;
 
 import java.util.List;
@@ -59,6 +60,10 @@ public interface CashService {
     @PUT("user/{id}")
     Call<User> modifyPassword(@Path("id") String id, @Field("password") String password);
 
+    @FormUrlEncoded
+    @PUT("user/{id}")
+    Call<User> modifyAvatar(@Path("id") String id, @Field("avatar") String avatar);
+
     @GET("user/{id}")
     Call<User> getUser(@Path("id") String id);
 
@@ -86,10 +91,9 @@ public interface CashService {
      * @return
      */
     @Multipart
-    @POST("api/uploadfs")
-    Call<String> uploadImage(@Part("uid") RequestBody userId, @Part("source") RequestBody source, @Part("filetype") RequestBody filetype,
-                             @Part("resourcekey") RequestBody resourcekey, @Part("resourceid") RequestBody resourceid,
-                             @Part MultipartBody.Part picture);
+    @POST("file")
+    Call<Image> uploadImage(
+            @Part MultipartBody.Part picture);
 
 
     @Multipart

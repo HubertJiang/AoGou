@@ -94,7 +94,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                     SobotApi.startSobotChat(getActivity(), info);
                     break;
                 case R.id.user:
-                    startActivity(new Intent(getActivity(), InformationActivity.class));
+                    Intent intent=new Intent(getActivity(), InformationActivity.class);
+                    intent.putExtra("user",user);
+                    startActivity(intent);
                     break;
             }
 

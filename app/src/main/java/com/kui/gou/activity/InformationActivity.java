@@ -9,11 +9,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.kui.gou.R;
+import com.kui.gou.entity.Image;
 import com.kui.gou.entity.User;
 import com.kui.gou.util.RetrofitFactory;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,7 +32,7 @@ import retrofit2.Response;
  * Created by Administrator on 2015/3/6.
  */
 public class InformationActivity extends BaseActivity implements View.OnClickListener {
-    private TextView addressTextView, genderTextView, nicknameTextView, genderText;
+    private TextView addressTextView, genderTextView, nicknameTextView;
     private String avatar, cropImagePath;
     private ImageView avatarImageView;
     private String imagePath;
@@ -30,7 +40,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
     private final int REQUEST_ADDRESS = 1, REQUEST_IMAGE = 2, REQUEST_NAME = 3;
     private int index = -1;
     private String[] genderArray;
-//    private ArrayList<BmobFile> images;
+    private ArrayList<Image> images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +48,19 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_information);
         initialize();
 
-//        nicknameTextView.setText(user.getNickname());
-//        genderTextView.setText(user.getEmail());
-//        addressTextView.setText(user.getAddress());
-//        genderText.setText(user.getGender());
-//        for (int i = 0; i < genderArray.length; i++) {
-//            if (genderArray[i].equals(user.getGender())) {
-//                index = i;
-//            }
-//        }
-//        if (user.getAvatar() != null) {
-//            images = new ArrayList<>();
-//            images.add(user.getAvatar());
-//            Glide.with(AoApplication.getInstance()).load(user.getAvatar().getUrl()).into(avatarImageView);
-//        }
+        nicknameTextView.setText(user.nickname);
+        genderTextView.setText(user.gender);
+        addressTextView.setText(user.address);
+        for (int i = 0; i < genderArray.length; i++) {
+            if (genderArray[i].equals(user.gender)) {
+                index = i;
+            }
+        }
+        if (user.avatar != null) {
+            images = new ArrayList<>();
+            images.add(user.avatar);
+            Glide.with(AoApplication.getInstance()).load(user.avatar.url).into(avatarImageView);
+        }
         findViewById(R.id.address).setOnClickListener(this);
         findViewById(R.id.avatar).setOnClickListener(this);
         findViewById(R.id.nickname).setOnClickListener(this);
@@ -66,9 +75,8 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         addressTextView = (TextView) findViewById(R.id.addressTextView);
         genderTextView = (TextView) findViewById(R.id.gender_text);
         nicknameTextView = (TextView) findViewById(R.id.nicknameTextView);
-        genderText = (TextView) findViewById(R.id.gender_text);
         avatarImageView = (ImageView) findViewById(R.id.avatarImageView);
-//        user = BmobUser.getCurrentUser(User.class);
+        user = (User) getIntent().getSerializableExtra("user");
         genderArray = getResources().getStringArray(R.array.gender);
     }
 
@@ -87,11 +95,11 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent, REQUEST_NAME);
                 break;
             case R.id.avatarImageView:
-//                if (images != null) {
-//                    intent = new Intent(this, ImageViewActivity.class);
-//                    intent.putExtra("images", images);
-//                    startActivity(intent);
-//                }
+                if (images != null) {
+                    intent = new Intent(this, ImageViewActivity.class);
+                    intent.putExtra("images", images);
+                    startActivity(intent);
+                }
                 break;
             case R.id.avatar:
                 intent = new Intent(this, MultiImageSelectorActivity.class);
@@ -130,7 +138,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-
+                    genderTextView.setText(response.body().gender);
                 } else {
                     AoApplication.showToast(R.string.no_network);
                 }
@@ -150,47 +158,44 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE:
-//                    ArrayList<String> images = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
-//                    final BmobFile bmobFile = new BmobFile(new File(images.get(0)));
-//                    bmobFile.uploadblock(new UploadFileListener() {
-//
-//                        @Override
-//                        public void done(BmobException e) {
-//                            if (e == null) {
-//                                final User newUser = new User();
-//                                newUser.setAvatar(bmobFile);
-//                                BmobUser bmobUser = BmobUser.getCurrentUser();
-//                                newUser.update(bmobUser.getObjectId(), new UpdateListener() {
-//                                    @Override
-//                                    public void done(BmobException e) {
-//                                        if (e == null) {
-//                                            Glide.with(AoApplication.getInstance()).load(newUser.getAvatar().getUrl()).into(avatarImageView);
-//                                        } else {
-//                                            try {
-//                                                JSONObject json = new JSONObject(e.getMessage());
-//                                                AoApplication.showToast(json.getString("detail"));
-//                                            } catch (JSONException ex) {
-//                                                ex.printStackTrace();
-//                                            }
-//                                        }
-//                                    }
-//                                });
-//                            } else {
-//                                try {
-//                                    JSONObject json = new JSONObject(e.getMessage());
-//                                    AoApplication.showToast(json.getString("detail"));
-//                                } catch (JSONException ex) {
-//                                    ex.printStackTrace();
-//                                }
-//                            }
-//
-//                        }
-//
-//                        @Override
-//                        public void onProgress(Integer value) {
-//                            // 返回的上传进度（百分比）
-//                        }
-//                    });
+                    ArrayList<String> images = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
+                    File file = new File(images.get(0));
+                    RequestBody requestFile =
+                            RequestBody.create(MediaType.parse("image/png"), file);
+
+                    MultipartBody.Part body =
+                            MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+                    RetrofitFactory.getInstance().uploadImage(body).enqueue(new Callback<Image>() {
+                        @Override
+                        public void onResponse(Call<Image> call, Response<Image> response) {
+                            if (response.isSuccessful()) {
+                                RetrofitFactory.getInstance().modifyAvatar(AoApplication.getUserId(), new Gson().toJson(response.body())).
+                                        enqueue(new Callback<User>() {
+                                            @Override
+                                            public void onResponse(Call<User> call, Response<User> response) {
+                                                if (response.isSuccessful()) {
+                                                    Glide.with(AoApplication.getInstance()).load(response.body().avatar.url).into(avatarImageView);
+                                                } else {
+                                                    AoApplication.showToast(R.string.no_network);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<User> call, Throwable throwable) {
+                                                AoApplication.showToast(R.string.no_network);
+                                            }
+                                        });
+                            } else {
+                                AoApplication.showToast(R.string.no_network);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Image> call, Throwable throwable) {
+                            AoApplication.showToast(R.string.no_network);
+                        }
+                    });
                     break;
                 case REQUEST_ADDRESS:
                     addressTextView.setText(data.getStringExtra("address"));

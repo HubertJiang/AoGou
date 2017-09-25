@@ -13,7 +13,6 @@ import android.widget.ViewFlipper;
 import com.kui.gou.R;
 import com.kui.gou.util.Constant;
 import com.kui.gou.util.TimeCount;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,7 +91,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                                 }
                                 AoApplication.showToast(des);
                             } catch (JSONException e) {
-                                CrashReport.postCatchedException(e);
+//                                CrashReport.postCatchedException(e);
                             }
 
                         }

@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.kui.gou.R;
 import com.kui.gou.util.SPUtils;
 import com.sobot.chat.SobotApi;
-import com.tencent.bugly.Bugly;
 
 
 
@@ -26,7 +25,7 @@ public class AoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        Bugly.init(getApplicationContext(), "900027438", false);
+//        Bugly.init(getApplicationContext(), "900027438", false);
 
         SobotApi.setNotificationFlag(getApplicationContext(),true, R.drawable.sobot_logo_small_icon,R.drawable.sobot_logo_icon);
     }
