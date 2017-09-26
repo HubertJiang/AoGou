@@ -5,16 +5,26 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.kui.gou.R;
 import com.kui.gou.adapter.MainAdapter;
+import com.kui.gou.entity.Goods;
 import com.kui.gou.listener.OnLoadMoreListener;
+import com.kui.gou.util.RetrofitFactory;
 import com.kui.gou.view.RecycleViewDivider;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LikesActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private MainAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private int  page;
+    private int page;
     private boolean hasMore;
 
     @Override
@@ -52,36 +62,33 @@ public class LikesActivity extends BaseActivity {
     }
 
     private void get() {
-//        BmobQuery<Goods> query = new BmobQuery<>();
-////        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_THEN_NETWORK);
-//        query.addWhereRelatedTo("likes", new BmobPointer(BmobUser.getCurrentUser()));
-////查询playerName叫“比目”的数据
-////返回50条数据，如果不加上这条语句，默认返回10条数据
-//        query.setLimit(Constant.COUNT);
-//        query.setSkip(Constant.COUNT * page);
-////执行查询方法
-//        query.findObjects(new FindListener<Goods>() {
-//            @Override
-//            public void done(List<Goods> object, BmobException e) {
-//                swipeRefreshLayout.setRefreshing(false);
-//                if (e == null) {
-//                    if (object.size() < Constant.COUNT) {
-//                        hasMore = false;
-//                    } else {
-//                        hasMore = true;
-//                    }
-//                    if (page == 0) {
-//                        adapter.setData(object);
-//                    } else {
-//                        adapter.deleteNull();
-//                        adapter.addAll(object);
-//                    }
-//                    adapter.setLoaded();
-//                    page++;
-//                } else {
-//                    AoApplication.showToast(R.string.no_network);
-//                }
-//            }
-//        });
+        JsonObject jsonObject = new JsonObject();
+        JsonArray jsonArray = new JsonArray();
+        for (String s : AoApplication.collection) {
+            jsonArray.add(s);
+        }
+        jsonObject.add("inq", jsonArray);
+        JsonObject jsonObject1 = new JsonObject();
+        jsonObject1.add("id", jsonObject);
+        JsonObject jsonObject2 = new JsonObject();
+        jsonObject2.add("where", jsonObject1);
+        RetrofitFactory.getInstance().getGoods(jsonObject2.toString()).enqueue(new Callback<List<Goods>>() {
+            @Override
+            public void onResponse(Call<List<Goods>> call, Response<List<Goods>> response) {
+                swipeRefreshLayout.setRefreshing(false);
+                if (response.isSuccessful()) {
+                    adapter.setData(response.body());
+                } else {
+                    AoApplication.showToast(R.string.no_network);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Goods>> call, Throwable throwable) {
+                swipeRefreshLayout.setRefreshing(false);
+                adapter.setLoaded();
+                AoApplication.showToast(R.string.no_network);
+            }
+        });
     }
 }

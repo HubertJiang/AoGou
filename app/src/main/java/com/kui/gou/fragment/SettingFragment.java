@@ -61,6 +61,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                         nicknameText.setText(R.string.sign_in_hint);
                     } else {
                         nicknameText.setText(user.nickname);
+                        AoApplication.collection=user.collection;
                         if (user.avatar != null) {
                             Glide.with(AoApplication.getInstance()).load(user.avatar.url).into(avatarImage);
                         }

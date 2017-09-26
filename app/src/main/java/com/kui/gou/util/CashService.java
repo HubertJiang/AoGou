@@ -30,12 +30,21 @@ public interface CashService {
     /**
      * cloud api
      */
+
+    /**
+     * goods
+     */
     @GET("goods")
     Call<List<Goods>> getGoods(@Query("filter") String filter);
 
     @GET("goods/{id}")
     Call<Goods> getGoodsDetail(@Path("id") String id);
 
+
+
+    /**
+     * user
+     */
     @FormUrlEncoded
     @POST("user/login")
     Call<User> signIn(@Field("username") String name, @Field("password") String password);
@@ -67,9 +76,11 @@ public interface CashService {
     @GET("user/{id}")
     Call<User> getUser(@Path("id") String id);
 
+
     @FormUrlEncoded
-    @POST("user/{id}/collection")
-    Call<User> collection(@Path("id") String id, @Field("id") String goodsId);
+    @PUT("user/{id}")
+    Call<User> collection(@Path("id") String id, @Field("collection") String collection);
+
 
 
     /**

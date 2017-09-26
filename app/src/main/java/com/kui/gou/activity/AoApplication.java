@@ -10,6 +10,7 @@ import com.kui.gou.R;
 import com.kui.gou.util.SPUtils;
 import com.sobot.chat.SobotApi;
 
+import java.util.List;
 
 
 /**
@@ -20,6 +21,7 @@ public class AoApplication extends Application {
     private static Toast toast;
     private static String userId;
     private static String userName;
+    public static List<String> collection;
 
     @Override
     public void onCreate() {

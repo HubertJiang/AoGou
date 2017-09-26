@@ -1,11 +1,14 @@
 package com.kui.gou.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kui.gou.R;
 import com.kui.gou.adapter.ImageAdapter;
 import com.kui.gou.entity.Goods;
@@ -50,7 +53,7 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
         RetrofitFactory.getInstance().getGoodsDetail(id).enqueue(new Callback<Goods>() {
             @Override
             public void onResponse(Call<Goods> call, Response<Goods> response) {
-                goods=response.body();
+                goods = response.body();
                 swipeRefreshLayout.setRefreshing(false);
                 getSupportActionBar().setTitle(goods.title);
                 content.setText(goods.content);
@@ -77,61 +80,49 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
             }
         });
 
-
+        if (AoApplication.collection != null && AoApplication.collection.contains(id)) {
+            likesTextView.setText(R.string.already_favorite);
+        } else {
+            likesTextView.setText(R.string.favorite);
+        }
     }
 
-    private void get() {
-        RetrofitFactory.getInstance().collection(AoApplication.getUserId(),goods.id).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable throwable) {
-
-            }
-        });
-//        BmobQuery<Goods> query = new BmobQuery<>();
-//        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
-//        List<BmobQuery<Goods>> queries = new ArrayList<>();
-//        queries.add(new BmobQuery<Goods>().addWhereEqualTo("objectId", id));
-//        queries.add(new BmobQuery<Goods>().addWhereRelatedTo("likes", new BmobPointer(user)));
-//        query.and(queries);
-//        query.findObjects(new FindListener<Goods>() {
-//            @Override
-//            public void done(List<Goods> list, BmobException e) {
-//                if (e == null) {
-//                    if (list.size() > 0) {
-//                        likesTextView.setText(R.string.already_favorite);
-//                    } else {
-//                        likesTextView.setText(R.string.favorite);
-//                    }
-//                } else {
-//                    AoApplication.showToast(R.string.no_network);
-//                }
-//            }
-//
-//        });
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.likes_text_view:
-//                if (user == null) {
-//                    startActivity(new Intent(this, SignInActivity.class));
-//                } else
-                    {
+                if (TextUtils.isEmpty(AoApplication.getUserId())) {
+                    startActivity(new Intent(this, SignInActivity.class));
+                } else {
                     likesTextView.setEnabled(false);
-                    get();
-//                    swipeRefreshLayout.setRefreshing(true);
+                    swipeRefreshLayout.setRefreshing(true);
+                    if (likesTextView.getText().equals(getString(R.string.favorite))) {
+                        AoApplication.collection.add(goods.id);
+                    } else {
+                        AoApplication.collection.remove(goods.id);
+                    }
+                RetrofitFactory.getInstance().collection(AoApplication.getUserId(), new Gson().toJson(AoApplication.collection)).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        likesTextView.setEnabled(true);
+                        if (likesTextView.getText().equals(getString(R.string.favorite))) {
+                            likesTextView.setText(R.string.already_favorite);
+                        } else {
+                            likesTextView.setText(R.string.favorite);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable throwable) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        likesTextView.setEnabled(true);
+                        AoApplication.showToast(R.string.no_network);
+                    }
+                });
 //                    BmobRelation relation = new BmobRelation();
-//                    if (likesTextView.getText().equals(getString(R.string.favorite))) {
-//                        relation.add(goods);
-//                    } else {
-//                        relation.remove(goods);
-//                    }
+//
 //                    User newUser = new User();
 //                    newUser.setLikes(relation);
 //                    newUser.update(BmobUser.getCurrentUser().getObjectId(), new UpdateListener() {
@@ -150,8 +141,8 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
 //                            }
 //                        }
 //                    });
-                }
-                break;
+        }
+        break;
 //            case R.id.service_text_view:
 //                if (user == null) {
 //                    startActivity(new Intent(this, SignInActivity.class));
@@ -177,8 +168,9 @@ public class GoodsDetailActivity extends BaseActivity implements View.OnClickLis
 //                    SobotApi.startSobotChat(this, info);
 //                    break;
 //                }
-        }
     }
+
+}
 
     @Override
     protected void onResume() {

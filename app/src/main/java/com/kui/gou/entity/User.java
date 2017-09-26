@@ -1,6 +1,7 @@
 package com.kui.gou.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by jiangkuiyuan on 16/9/10.
@@ -15,4 +16,5 @@ public class User implements Serializable {
     public String gender;
     public Image avatar;
     public Image email;
+    public List<String> collection;
 }
